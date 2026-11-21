@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Créditos & Desenvolvedores · Feira Cultural TI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Favicon / Ícone da aba -->
+    <link rel="icon" href="Byte.jfif" type="image/jpeg">
+    <link rel="shortcut icon" href="Byte.jfif" type="image/jpeg">
+    <!-- Fontes Inter & Apple System -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
+            background-color: #020617; /* Preto/Azul Profundo */
+            color: #ffffff;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ── Fundo Vivo em Azul (Ambient Glowing Living Mesh) ── */
+        .ambient-mesh {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 15%, #051433 0%, #020b1e 50%, #01040a 100%);
+        }
+
+        /* Grelha sutil de fundo em azul/cinza */
+        .cyber-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+            background-size: 38px 38px;
+            opacity: 0.65;
+        }
+
+        /* Orbes orgânicos pulsantes em azul vivo */
+        .glow-orb {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(85px);
+            opacity: 0.70;
+            will-change: transform, opacity;
+        }
+
+        .orb-1 {
+            top: -12%;
+            left: 15%;
+            width: 580px;
+            height: 580px;
+            background: radial-gradient(circle, #0284c7 0%, #1e40af 55%, transparent 75%);
+            animation: floatOrb1 14s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            bottom: -15%;
+            right: 5%;
+            width: 620px;
+            height: 620px;
+            background: radial-gradient(circle, #2563eb 0%, #0369a1 50%, transparent 75%);
+            animation: floatOrb2 16s ease-in-out infinite alternate;
+        }
+
+        .orb-3 {
+            top: 40%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #0ea5e9 0%, #1d4ed8 45%, transparent 75%);
+            animation: floatOrb3 18s ease-in-out infinite alternate;
+        }
+
+        .orb-4 {
+            top: 25%;
+            right: 20%;
+            width: 440px;
+            height: 440px;
+            background: radial-gradient(circle, #38bdf8 0%, #1e3a8a 60%, transparent 80%);
+            opacity: 0.45;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb1 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(70px, 50px) scale(1.12); }
+            100% { transform: translate(-40px, 80px) scale(0.95); }
+        }
+
+        @keyframes floatOrb2 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-80px, -60px) scale(1.15); }
+            100% { transform: translate(40px, -40px) scale(0.92); }
+        }
+
+        @keyframes floatOrb3 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, -50px) scale(1.08); }
+            100% { transform: translate(-30px, 40px) scale(0.90); }
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.35; transform: scale(0.95); }
+            100% { opacity: 0.65; transform: scale(1.15); }
+        }
+
+        /* ── Efeito Apple Frosted Glass Escuro (Preto/Azul/Cinza/Branco) ── */
+        .glass-panel {
+            background: rgba(11, 20, 38, 0.72);
+            -webkit-backdrop-filter: blur(36px) saturate(210%);
+            backdrop-filter: blur(36px) saturate(210%);
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            box-shadow:
+                0 30px 70px -15px rgba(0, 0, 0, 0.85),
+                0 0 35px -5px rgba(2, 132, 199, 0.20),
+                0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+            backdrop-filter: blur(24px) saturate(190%);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow:
+                0 10px 25px -4px rgba(0, 0, 0, 0.45),
+                0 1px 0 0 rgba(255, 255, 255, 0.08) inset;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(17, 30, 60, 0.82);
+            border-color: rgba(56, 189, 248, 0.55);
+            transform: translateY(-2.5px);
+            box-shadow:
+                0 16px 36px -4px rgba(2, 132, 199, 0.30),
+                0 0 20px -2px rgba(56, 189, 248, 0.25),
+                0 1px 0 0 rgba(255, 255, 255, 0.20) inset;
+        }
+
+        /* Botão de Retorno */
+        .nav-back-btn {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(56, 189, 248, 0.32);
+            border-radius: 9999px;
+            padding: 9px 22px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        .nav-back-btn:hover {
+            background: rgba(2, 132, 199, 0.25);
+            border-color: #38bdf8;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 24px -2px rgba(56, 189, 248, 0.35),
+                0 0 15px rgba(56, 189, 248, 0.25);
+        }
+
+        /* ── Efeito Vibrante & Faíscas no QR Code ── */
+        .qr-outer-stage {
+            position: relative;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Canvas de Faíscas posicionado sobre o QR Code */
+        #qr-sparks-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Halo vibrante de energia azul elétrico */
+        .qr-energy-halo {
+            position: absolute;
+            inset: 8px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.7), rgba(37, 99, 235, 0.5), rgba(2, 132, 199, 0.8));
+            filter: blur(18px);
+            opacity: 0.75;
+            animation: qrHaloPulse 3.2s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        @keyframes qrHaloPulse {
+            0% {
+                opacity: 0.55;
+                filter: blur(14px);
+                transform: scale(0.97);
+            }
+            100% {
+                opacity: 0.95;
+                filter: blur(22px);
+                transform: scale(1.04);
+            }
+        }
+
+        /* Moldura de alta tecnologia com borda gradiente viva */
+        .qr-card-frame {
+            position: relative;
+            z-index: 5;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(226, 232, 240, 0.90));
+            padding: 14px;
+            border-radius: 24px;
+            border: 2px solid rgba(56, 189, 248, 0.65);
+            box-shadow:
+                0 0 30px rgba(56, 189, 248, 0.60),
+                0 0 65px rgba(37, 99, 235, 0.35),
+                0 15px 35px rgba(0, 0, 0, 0.55);
+            transition: all 0.3s ease;
+        }
+
+        .qr-card-frame:hover {
+            border-color: #ffffff;
+            box-shadow:
+                0 0 45px rgba(56, 189, 248, 0.85),
+                0 0 90px rgba(37, 99, 235, 0.55),
+                0 20px 45px rgba(0, 0, 0, 0.7);
+            transform: scale(1.02);
+        }
+
+        /* Animação suave de entrada */
+        .fade-in-up {
+            animation: fadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="py-8 px-4 flex flex-col items-center justify-center min-h-screen">
+
+    <!-- Fundo Vivo em Azul e Preto -->
+    <div class="ambient-mesh">
+        <div class="cyber-grid"></div>
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+        <div class="glow-orb orb-4"></div>
+    </div>
+
+    <main class="w-full max-w-4xl space-y-6 fade-in-up relative z-10">
+
+        <!-- Topo: Barra de Retorno e Identificação -->
+        <header class="flex items-center justify-between gap-4 pb-2">
+            <div class="flex items-center gap-2.5">
+                <a href="index.html" class="nav-back-btn">
+                    Voltar ao BYTE 3D
+                </a>
+                <a href="gerar_byte.html" class="nav-back-btn bg-indigo-950/70 border-indigo-400/40 text-indigo-200 hover:text-white hover:bg-indigo-900">
+                    Criar Meu BYTE 3D
+                </a>
+            </div>
+            <div class="text-right">
+                <span class="text-xs font-bold tracking-widest text-sky-400 uppercase">Feira Cultural de TI</span>
+                <p class="text-[11px] text-slate-400 font-medium">Assistente Virtual & Visão Computacional</p>
+            </div>
+        </header>
+
+        <!-- Bloco Principal em Duas Colunas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Coluna 1: QR Code do Projeto com Efeito Vibrante e Faíscas (1/3) -->
+            <section class="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4">
+                <div>
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">Acesse o Projeto</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Escaneie o QR Code com a câmera do celular</p>
+                </div>
+
+                <!-- Palco do QR Code com Halo Vibrante e Emitter de Faíscas -->
+                <div id="qr-stage" class="qr-outer-stage">
+                    <!-- Halo de Energia Azul Elétrico -->
+                    <div class="qr-energy-halo"></div>
+
+                    <!-- Canvas para Renderização das Faíscas Dinâmicas -->
+                    <canvas id="qr-sparks-canvas"></canvas>
+
+                    <!-- Moldura Central do QR Code -->
+                    <div class="qr-card-frame">
+                        <img src="C:\Users\Tiago\Desktop\escala-acolitos\FeiraCultural\qrcode_feira.png"
+                             alt="QR Code Feira Cultural TI"
+                             class="w-48 h-48 object-contain rounded-xl">
+                    </div>
+                </div>
+
+                <div class="text-[11px] text-slate-300 font-medium leading-relaxed max-w-xs">
+                    Acesse os conteúdos completos, códigos-fonte e materiais didáticos online.
+                </div>
+            </section>
+
+            <!-- Coluna 2 e 3: Equipe de Desenvolvedores DevFair (2/3) -->
+            <section class="md:col-span-2 glass-panel rounded-3xl p-6 space-y-4">
+                <div>
+                    <h2 class="text-base font-extrabold text-white tracking-tight">Equipe Desenvolvedora DevFair</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Criadores e especialistas por trás do sistema interativo</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+
+                    <!-- Membro 1: Thallis.V -->
+                    <div class="glass-card p-4 rounded-2xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white tracking-wide">Thallis.V</span>
+                            <span class="text-[10px] font-semibold text-sky-300 bg-sky-950/80 border border-sky-400/40 px-2.5 py-0.5 rounded-full">Front-end & 3D</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Responsável pelo desenvolvimento e renderização procedural do robô 3D em Three.js, efeitos e animações interativas.
+                        </p>
+                    </div>
+
+                    <!-- Membro 2: Bruna -->
+                    <div class="glass-card p-4 rounded-2xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white tracking-wide">Bruna</span>
+                            <span class="text-[10px] font-semibold text-indigo-300 bg-indigo-950/80 border border-indigo-400/40 px-2.5 py-0.5 rounded-full">Design & UI/UX</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Criação da interface moderna no estilo Apple Glass, paleta de iluminação cibernética e experiência fluida do usuário.
+                        </p>
+                    </div>
+
+                    <!-- Membro 3: Eyke -->
+                    <div class="glass-card p-4 rounded-2xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white tracking-wide">Eyke</span>
+                            <span class="text-[10px] font-semibold text-blue-300 bg-blue-950/80 border border-blue-400/40 px-2.5 py-0.5 rounded-full">Back-end & IA</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Desenvolvimento da arquitetura WebSocket em tempo real, integração de visão computacional e comunicação entre módulos.
+                        </p>
+                    </div>
+
+                    <!-- Membro 4: Gustavo -->
+                    <div class="glass-card p-4 rounded-2xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white tracking-wide">Gustavo</span>
+                            <span class="text-[10px] font-semibold text-cyan-300 bg-cyan-950/80 border border-cyan-400/40 px-2.5 py-0.5 rounded-full">Robótica & Visão</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Implementação do rastreamento de pontos da mão via MediaPipe, calibração angular e transições por gestos.
+                        </p>
+                    </div>
+
+                    <!-- Membro 5: Ray -->
+                    <div class="glass-card p-4 rounded-2xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white tracking-wide">Ray</span>
+                            <span class="text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-400/40 px-2.5 py-0.5 rounded-full">Segurança</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Estruturação dos tópicos pedagógicos de Cibersegurança, boas práticas com senhas e proteção de privacidade digital.
+                        </p>
+                    </div>
+
+                    <!-- Membro 6: Marco Thulio -->
+                    <div class="glass-card p-4 rounded-2xl space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white tracking-wide">Marco Thulio</span>
+                            <span class="text-[10px] font-semibold text-purple-300 bg-purple-950/80 border border-purple-400/40 px-2.5 py-0.5 rounded-full">Gamificação</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Concepção da metodologia lúdica e interativa de aprendizagem, dinamização das respostas e reações do robô.
+                        </p>
+                    </div>
+
+                    <!-- Membro 7: Mayra -->
+                    <div class="glass-card p-4 rounded-2xl space-y-2 sm:col-span-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white tracking-wide">Mayra</span>
+                            <span class="text-[10px] font-semibold text-pink-300 bg-pink-950/80 border border-pink-400/40 px-2.5 py-0.5 rounded-full">Conteúdo & Netiqueta</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Curadoria dos conteúdos de netiqueta, convivência digital saudável, sintetização de voz nativa e personalização do robô.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Rodapé Informativo da Feira -->
+                <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                    <span>Feira Cultural de Tecnologia da Informação</span>
+                    <span class="text-sky-400 font-semibold">Versão 2.0 · 2026</span>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- ── Script do Sistema de Faíscas Vivas ao Redor do QR Code ── -->
+    <script>
+        (function () {
+            const canvas = document.getElementById('qr-sparks-canvas');
+            const stage = document.getElementById('qr-stage');
+            if (!canvas || !stage) return;
+
+            const ctx = canvas.getContext('2d');
+            let width = 0;
+            let height = 0;
+            let sparks = [];
+            const MAX_SPARKS = 45;
+
+            // Paleta de cores das faíscas: Branco, Azul Elétrico, Ciano Neon
+            const SPARK_COLORS = [
+                '#ffffff',
+                '#38bdf8',
+                '#60a5fa',
+                '#93c5fd',
+                '#0ea5e9'
+            ];
+
+            function resizeCanvas() {
+                const rect = stage.getBoundingClientRect();
+                width = rect.width;
+                height = rect.height;
+                canvas.width = width * window.devicePixelRatio;
+                canvas.height = height * window.devicePixelRatio;
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class Spark {
+                constructor(burst = false) {
+                    this.reset(burst);
+                }
+
+                reset(burst = false) {
+                    // Centro e dimensões da caixa do QR code
+                    const cx = width / 2;
+                    const cy = height / 2;
+                    const hw = 105; // metade da largura aproximada do QR card
+                    const hh = 105; // metade da altura aproximada do QR card
+
+                    // Escolhe uma das 4 bordas para nascer
+                    const side = Math.floor(Math.random() * 4);
+                    let x, y, vx, vy;
+
+                    if (side === 0) { // Topo
+                        x = cx - hw + Math.random() * (hw * 2);
+                        y = cy - hh;
+                        vx = (Math.random() - 0.5) * 1.8;
+                        vy = -Math.random() * (burst ? 4.5 : 2.5) - 0.5;
+                    } else if (side === 1) { // Direita
+                        x = cx + hw;
+                        y = cy - hh + Math.random() * (hh * 2);
+                        vx = Math.random() * (burst ? 4.5 : 2.5) + 0.5;
+                        vy = (Math.random() - 0.5) * 1.8;
+                    } else if (side === 2) { // Base
+                        x = cx - hw + Math.random() * (hw * 2);
+                        y = cy + hh;
+                        vx = (Math.random() - 0.5) * 1.8;
+                        vy = Math.random() * (burst ? 4.5 : 2.5) + 0.5;
+                    } else { // Esquerda
+                        x = cx - hw;
+                        y = cy - hh + Math.random() * (hh * 2);
+                        vx = -Math.random() * (burst ? 4.5 : 2.5) - 0.5;
+                        vy = (Math.random() - 0.5) * 1.8;
+                    }
+
+                    this.x = x;
+                    this.y = y;
+                    this.vx = vx;
+                    this.vy = vy;
+                    this.size = Math.random() * 2.8 + 1.2;
+                    this.color = SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)];
+                    this.alpha = 1.0;
+                    this.decay = Math.random() * 0.035 + 0.018;
+                    this.trailLength = Math.random() * 5 + 3;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vx *= 0.96;
+                    this.vy *= 0.96;
+                    this.alpha -= this.decay;
+                }
+
+                draw(context) {
+                    if (this.alpha <= 0) return;
+                    context.save();
+                    context.globalAlpha = Math.max(0, this.alpha);
+                    context.fillStyle = this.color;
+                    context.shadowColor = this.color;
+                    context.shadowBlur = 8;
+
+                    // Desenha faísca com rastro dinâmico
+                    context.beginPath();
+                    context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    context.fill();
+
+                    // Rastro esticado na direção da velocidade
+                    context.beginPath();
+                    context.moveTo(this.x, this.y);
+                    context.lineTo(this.x - this.vx * 3.5, this.y - this.vy * 3.5);
+                    context.strokeStyle = this.color;
+                    context.lineWidth = this.size * 0.7;
+                    context.stroke();
+
+                    context.restore();
+                }
+            }
+
+            // Inicializa faíscas
+            for (let i = 0; i < MAX_SPARKS; i++) {
+                sparks.push(new Spark());
+            }
+
+            function animateSparks() {
+                ctx.clearRect(0, 0, width, height);
+
+                sparks.forEach(spark => {
+                    spark.update();
+                    if (spark.alpha <= 0) {
+                        spark.reset();
+                    }
+                    spark.draw(ctx);
+                });
+
+                requestAnimationFrame(animateSparks);
+            }
+
+            requestAnimationFrame(animateSparks);
+
+            // Explosão energética de faíscas ao passar o mouse ou tocar no QR Code
+            stage.addEventListener('pointerenter', () => {
+                sparks.forEach(s => s.reset(true));
+            });
+        })();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,247 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          BYTE 3D · FEIRA CULTURAL DE TI — TUTORIAL DE INSTALAÇÃO            ║
+║          Funciona em: Windows 10/11 e Linux (Ubuntu, Debian, Fedora)        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Este tutorial explica como configurar e rodar o sistema BYTE 3D em qualquer
+computador após baixar os arquivos do GitHub.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 1 — O QUE É CADA ARQUIVO?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  index.html          → Página principal com o robô 3D BYTE interativo
+  creditos.html       → Página de créditos da equipe
+  gerar_byte.html     → Personalizador: crie seu próprio robô e baixe o HTML
+  gesture_controller.py → Sistema de visão computacional (Python + câmera)
+  Byte.jfif           → Ícone/logo do projeto (aparece na aba do navegador)
+  hand_landmarker.task → Modelo de IA para detectar mãos (MediaPipe)
+  requirements.txt    → Lista de bibliotecas Python necessárias
+  Efeito Sonoro de Transição - [Crescendo Reverse 1].mp3 → Áudio da transição
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 2 — USAR SEM GESTOS (APENAS O SITE NO NAVEGADOR)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Se quiser apenas ver o robô 3D sem usar a webcam/gestos:
+
+  1. Abra a pasta FeiraCultural no explorador de arquivos
+  2. Dê dois cliques em   index.html
+  3. O robô aparece diretamente no navegador — sem instalar nada!
+
+  ✔ Funciona offline (sem internet), no Chrome, Firefox ou Edge.
+  ✔ No celular: transfira os arquivos e abra o index.html pelo gerenciador.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 3 — INSTALAR PYTHON E AS DEPENDÊNCIAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  O sistema de gestos precisa do Python 3.9+ e algumas bibliotecas.
+
+  ══════════════════════════════════
+  WINDOWS (10 ou 11)
+  ══════════════════════════════════
+
+  PASSO 1 — Instalar o Python
+    a) Acesse: https://www.python.org/downloads/
+    b) Clique em "Download Python 3.x.x"
+    c) Execute o instalador
+    d) IMPORTANTE: marque a caixa "Add Python to PATH" antes de instalar!
+    e) Clique em "Install Now" e aguarde
+
+  PASSO 2 — Verificar instalação (abra o Prompt de Comando / CMD)
+    Pressione: Win + R → digite "cmd" → Enter
+    Digite: python --version
+    Deve aparecer algo como: Python 3.11.x
+
+  PASSO 3 — Instalar as bibliotecas
+    No CMD, navegue até a pasta do projeto:
+      cd C:\caminho\para\FeiraCultural
+
+    Instale tudo com um comando:
+      pip install -r requirements.txt
+
+    Se der erro de permissão, use:
+      pip install --user -r requirements.txt
+
+  PASSO 4 — Instalar o pacote de WebSocket (se não estiver no requirements.txt)
+      pip install websockets
+
+  ══════════════════════════════════
+  LINUX (Ubuntu, Debian, Mint)
+  ══════════════════════════════════
+
+  PASSO 1 — Instalar o Python e dependências do sistema
+    Abra o Terminal e execute:
+      sudo apt update
+      sudo apt install python3 python3-pip python3-venv -y
+
+    Para o áudio (opcional, mas recomendado):
+      sudo apt install mpg123 -y
+
+    Para fechar janelas com gestos (opcional):
+      sudo apt install xdotool -y
+
+  PASSO 2 — Verificar instalação
+    python3 --version
+    # Deve mostrar: Python 3.9.x ou superior
+
+  PASSO 3 — Navegar até a pasta do projeto
+    cd /caminho/para/FeiraCultural
+
+  PASSO 4 — Criar ambiente virtual (recomendado)
+    python3 -m venv venv
+    source venv/bin/activate
+
+  PASSO 5 — Instalar as bibliotecas
+    pip install -r requirements.txt
+    pip install websockets
+
+  ══════════════════════════════════
+  LINUX (Fedora, Red Hat, CentOS)
+  ══════════════════════════════════
+
+  PASSO 1 — Instalar dependências
+    sudo dnf install python3 python3-pip -y
+    sudo dnf install mpg123 -y          (para áudio)
+    sudo dnf install xdotool -y         (para fechar janelas com gestos)
+
+  PASSO 2 — Resto igual ao Ubuntu (Passos 2 a 5 acima)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 4 — RODAR O SISTEMA DE GESTOS (PYTHON + CÂMERA)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  WINDOWS:
+    1. Abra o CMD na pasta FeiraCultural
+    2. Execute:
+       python gesture_controller.py
+
+  LINUX:
+    1. Abra o Terminal na pasta FeiraCultural
+    2. Se usou ambiente virtual: source venv/bin/activate
+    3. Execute:
+       python3 gesture_controller.py
+
+  O sistema vai:
+  • Abrir a webcam com janela de visualização
+  • Iniciar o servidor WebSocket em ws://127.0.0.1:8765
+  • Aguardar gestos de mão
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 5 — COMO USAR OS GESTOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Com o sistema Python rodando E o index.html aberto no navegador:
+
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  GESTO                │ AÇÃO                                    │
+  ├─────────────────────────────────────────────────────────────────┤
+  │  👍 Joia (polegar ↑)  │ Abre o index.html no navegador          │
+  │  ✌️  Dois dedos        │ Fecha a janela do navegador             │
+  │  🖐 Mão aberta + girar│ Escurece tela e vai para creditos.html  │
+  │                       │ (gire 90° no sentido horário para → )   │
+  │  Q ou ESC (teclado)   │ Encerra o sistema Python                │
+  └─────────────────────────────────────────────────────────────────┘
+
+  DICAS:
+  • Mantenha a mão a ~40-60 cm da câmera
+  • Boa iluminação ajuda muito na detecção
+  • Para o gesto de joia, sustente por ~1 segundo até confirmar
+  • A barra de progresso no topo da janela mostra o reconhecimento
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 6 — SOLUÇÃO DE PROBLEMAS COMUNS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ERRO: "ModuleNotFoundError: No module named 'cv2'"
+  SOLUÇÃO: pip install opencv-python
+
+  ERRO: "ModuleNotFoundError: No module named 'mediapipe'"
+  SOLUÇÃO: pip install mediapipe
+
+  ERRO: "ModuleNotFoundError: No module named 'websockets'"
+  SOLUÇÃO: pip install websockets
+
+  ERRO: "Não foi possível acessar a webcam"
+  SOLUÇÃO (Windows): Verifique Configurações → Privacidade → Câmera
+  SOLUÇÃO (Linux):   sudo usermod -a -G video $USER  (depois reinicie)
+                     Ou verifique: ls /dev/video*
+
+  ERRO (Linux): "cv2.error: Can't open camera"
+  SOLUÇÃO: sudo apt install libgl1-mesa-glx -y
+           Ou tente: v4l2-ctl --list-devices  para ver câmeras disponíveis
+           Se tiver mais de uma: edite gesture_controller.py, linha ~530:
+           cap = cv2.VideoCapture(1)  (mude 0 para 1 ou 2)
+
+  ERRO (Linux): "DISPLAY environment variable not set"
+  SOLUÇÃO: O OpenCV precisa de display gráfico.
+           Execute em sessão gráfica (não em SSH sem X11 forwarding).
+           Alternativa: export DISPLAY=:0 (antes de rodar)
+
+  BALÕES não aparecem sobre o robô:
+  SOLUÇÃO: Já corrigido na versão atual. Certifique-se de usar os arquivos
+           mais recentes baixados do GitHub.
+
+  ROBÔ não reage ao toque no celular:
+  SOLUÇÃO: Já corrigido na versão atual. Toque rapidamente (não arraste)
+           para disparar as animações.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 7 — INSTALAR EM OUTRO COMPUTADOR (PASSO A PASSO RÁPIDO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Baixe o repositório do GitHub:
+     • Acesse a página do repositório
+     • Clique em "Code" → "Download ZIP"
+     • Extraia o ZIP em qualquer pasta (ex: Área de Trabalho)
+
+  2. Para usar APENAS o site (sem gestos):
+     • Abra a pasta FeiraCultural
+     • Clique duas vezes em index.html
+     • Pronto! Funciona sem instalar nada.
+
+  3. Para usar COM gestos (com câmera):
+
+     WINDOWS:
+       a) Instale o Python (python.org) marcando "Add to PATH"
+       b) Abra o CMD na pasta FeiraCultural
+       c) pip install -r requirements.txt
+       d) pip install websockets
+       e) Abra o index.html no navegador
+       f) Em outro CMD: python gesture_controller.py
+
+     LINUX:
+       a) sudo apt install python3 python3-pip mpg123 xdotool -y
+       b) cd /caminho/FeiraCultural
+       c) pip3 install -r requirements.txt
+       d) pip3 install websockets
+       e) Abra o index.html no navegador (duplo clique ou xdg-open index.html)
+       f) Em outro terminal: python3 gesture_controller.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 8 — CRIAR SUA LEMBRANÇA PERSONALIZADA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Abra gerar_byte.html no navegador (duplo clique)
+  2. Escolha o nome do robô, cores e frases
+  3. Clique em "Gerar o Meu BYTE 3D"
+  4. Um arquivo HTML será baixado — funciona offline em qualquer dispositivo!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTE 9 — VERSÕES RECOMENDADAS DAS BIBLIOTECAS PYTHON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Python:         3.9, 3.10, 3.11 ou 3.12
+  opencv-python:  4.8.x ou superior
+  mediapipe:      0.10.x ou superior
+  websockets:     12.x ou superior
+  numpy:          1.24.x ou superior
+
+  Instale tudo de uma vez:
+    pip install opencv-python mediapipe websockets numpy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Projeto: BYTE 3D · Feira Cultural de TI
+  Suporte: Consulte o repositório no GitHub para issues e atualizações.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
