@@ -12,7 +12,8 @@
     <link rel="icon" href="Byte.jfif" type="image/jpeg">
     <link rel="shortcut icon" href="Byte.jfif" type="image/jpeg">
     <!-- Fontes Inter & Apple System -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -24,7 +25,8 @@
             padding: 0;
             min-height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", sans-serif;
-            background-color: #020617; /* Preto/Azul Profundo */
+            background-color: #020617;
+            /* Preto/Azul Profundo */
             color: #ffffff;
             user-select: none;
             -webkit-user-select: none;
@@ -46,7 +48,7 @@
         .cyber-grid {
             position: absolute;
             inset: 0;
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
             background-size: 38px 38px;
@@ -100,26 +102,57 @@
         }
 
         @keyframes floatOrb1 {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(70px, 50px) scale(1.12); }
-            100% { transform: translate(-40px, 80px) scale(0.95); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(70px, 50px) scale(1.12);
+            }
+
+            100% {
+                transform: translate(-40px, 80px) scale(0.95);
+            }
         }
 
         @keyframes floatOrb2 {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-80px, -60px) scale(1.15); }
-            100% { transform: translate(40px, -40px) scale(0.92); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(-80px, -60px) scale(1.15);
+            }
+
+            100% {
+                transform: translate(40px, -40px) scale(0.92);
+            }
         }
 
         @keyframes floatOrb3 {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(50px, -50px) scale(1.08); }
-            100% { transform: translate(-30px, 40px) scale(0.90); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(50px, -50px) scale(1.08);
+            }
+
+            100% {
+                transform: translate(-30px, 40px) scale(0.90);
+            }
         }
 
         @keyframes pulseGlow {
-            0% { opacity: 0.35; transform: scale(0.95); }
-            100% { opacity: 0.65; transform: scale(1.15); }
+            0% {
+                opacity: 0.35;
+                transform: scale(0.95);
+            }
+
+            100% {
+                opacity: 0.65;
+                transform: scale(1.15);
+            }
         }
 
         /* ── Efeito Apple Frosted Glass Escuro (Preto/Azul/Cinza/Branco) ── */
@@ -220,6 +253,7 @@
                 filter: blur(14px);
                 transform: scale(0.97);
             }
+
             100% {
                 opacity: 0.95;
                 filter: blur(22px);
@@ -261,6 +295,7 @@
                 opacity: 0;
                 transform: translateY(22px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -288,7 +323,8 @@
                 <a href="index.html" class="nav-back-btn">
                     Voltar ao BYTE 3D
                 </a>
-                <a href="gerar_byte.html" class="nav-back-btn bg-indigo-950/70 border-indigo-400/40 text-indigo-200 hover:text-white hover:bg-indigo-900">
+                <a href="gerar_byte.html"
+                    class="nav-back-btn bg-indigo-950/70 border-indigo-400/40 text-indigo-200 hover:text-white hover:bg-indigo-900">
                     Criar Meu BYTE 3D
                 </a>
             </div>
@@ -302,7 +338,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             <!-- Coluna 1: QR Code do Projeto com Efeito Vibrante e Faíscas (1/3) -->
-            <section class="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4">
+            <section
+                class="glass-panel rounded-3xl p-6 flex flex-col items-center justify-center text-center space-y-4">
                 <div>
                     <h2 class="text-sm font-bold text-white uppercase tracking-wider">Acesse o Projeto</h2>
                     <p class="text-xs text-slate-400 mt-0.5">Escaneie o QR Code com a câmera do celular</p>
@@ -318,9 +355,8 @@
 
                     <!-- Moldura Central do QR Code -->
                     <div class="qr-card-frame">
-                        <img src="C:\Users\Tiago\Desktop\escala-acolitos\FeiraCultural\qrcode_feira.png"
-                             alt="QR Code Feira Cultural TI"
-                             class="w-48 h-48 object-contain rounded-xl">
+                        <img src="qrcode_feira.png" alt="QR Code Feira Cultural TI"
+                            class="w-48 h-48 object-contain rounded-xl">
                     </div>
                 </div>
 
@@ -333,7 +369,8 @@
             <section class="md:col-span-2 glass-panel rounded-3xl p-6 space-y-4">
                 <div>
                     <h2 class="text-base font-extrabold text-white tracking-tight">Equipe Desenvolvedora DevFair</h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Criadores e especialistas por trás do sistema interativo</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Criadores e especialistas por trás do sistema interativo
+                    </p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -342,10 +379,13 @@
                     <div class="glass-card p-4 rounded-2xl space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-white tracking-wide">Thallis.V</span>
-                            <span class="text-[10px] font-semibold text-sky-300 bg-sky-950/80 border border-sky-400/40 px-2.5 py-0.5 rounded-full">Front-end & 3D</span>
+                            <span
+                                class="text-[10px] font-semibold text-sky-300 bg-sky-950/80 border border-sky-400/40 px-2.5 py-0.5 rounded-full">Front-end
+                                & 3D</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Responsável pelo desenvolvimento e renderização procedural do robô 3D em Three.js, efeitos e animações interativas.
+                            Responsável pelo desenvolvimento e renderização procedural do robô 3D em Three.js, efeitos e
+                            animações interativas.
                         </p>
                     </div>
 
@@ -353,10 +393,13 @@
                     <div class="glass-card p-4 rounded-2xl space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-white tracking-wide">Bruna</span>
-                            <span class="text-[10px] font-semibold text-indigo-300 bg-indigo-950/80 border border-indigo-400/40 px-2.5 py-0.5 rounded-full">Design & UI/UX</span>
+                            <span
+                                class="text-[10px] font-semibold text-indigo-300 bg-indigo-950/80 border border-indigo-400/40 px-2.5 py-0.5 rounded-full">Design
+                                & UI/UX</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Criação da interface moderna no estilo Apple Glass, paleta de iluminação cibernética e experiência fluida do usuário.
+                            Criação da interface moderna no estilo Apple Glass, paleta de iluminação cibernética e
+                            experiência fluida do usuário.
                         </p>
                     </div>
 
@@ -364,10 +407,13 @@
                     <div class="glass-card p-4 rounded-2xl space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-white tracking-wide">Eyke</span>
-                            <span class="text-[10px] font-semibold text-blue-300 bg-blue-950/80 border border-blue-400/40 px-2.5 py-0.5 rounded-full">Back-end & IA</span>
+                            <span
+                                class="text-[10px] font-semibold text-blue-300 bg-blue-950/80 border border-blue-400/40 px-2.5 py-0.5 rounded-full">Back-end
+                                & IA</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Desenvolvimento da arquitetura WebSocket em tempo real, integração de visão computacional e comunicação entre módulos.
+                            Desenvolvimento da arquitetura WebSocket em tempo real, integração de visão computacional e
+                            comunicação entre módulos.
                         </p>
                     </div>
 
@@ -375,10 +421,13 @@
                     <div class="glass-card p-4 rounded-2xl space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-white tracking-wide">Gustavo</span>
-                            <span class="text-[10px] font-semibold text-cyan-300 bg-cyan-950/80 border border-cyan-400/40 px-2.5 py-0.5 rounded-full">Robótica & Visão</span>
+                            <span
+                                class="text-[10px] font-semibold text-cyan-300 bg-cyan-950/80 border border-cyan-400/40 px-2.5 py-0.5 rounded-full">Robótica
+                                & Visão</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Implementação do rastreamento de pontos da mão via MediaPipe, calibração angular e transições por gestos.
+                            Implementação do rastreamento de pontos da mão via MediaPipe, calibração angular e
+                            transições por gestos.
                         </p>
                     </div>
 
@@ -386,10 +435,12 @@
                     <div class="glass-card p-4 rounded-2xl space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-white tracking-wide">Ray</span>
-                            <span class="text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-400/40 px-2.5 py-0.5 rounded-full">Segurança</span>
+                            <span
+                                class="text-[10px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-400/40 px-2.5 py-0.5 rounded-full">Segurança</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Estruturação dos tópicos pedagógicos de Cibersegurança, boas práticas com senhas e proteção de privacidade digital.
+                            Estruturação dos tópicos pedagógicos de Cibersegurança, boas práticas com senhas e proteção
+                            de privacidade digital.
                         </p>
                     </div>
 
@@ -397,10 +448,12 @@
                     <div class="glass-card p-4 rounded-2xl space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-white tracking-wide">Marco Thulio</span>
-                            <span class="text-[10px] font-semibold text-purple-300 bg-purple-950/80 border border-purple-400/40 px-2.5 py-0.5 rounded-full">Gamificação</span>
+                            <span
+                                class="text-[10px] font-semibold text-purple-300 bg-purple-950/80 border border-purple-400/40 px-2.5 py-0.5 rounded-full">Gamificação</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Concepção da metodologia lúdica e interativa de aprendizagem, dinamização das respostas e reações do robô.
+                            Concepção da metodologia lúdica e interativa de aprendizagem, dinamização das respostas e
+                            reações do robô.
                         </p>
                     </div>
 
@@ -408,17 +461,21 @@
                     <div class="glass-card p-4 rounded-2xl space-y-2 sm:col-span-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-white tracking-wide">Mayra</span>
-                            <span class="text-[10px] font-semibold text-pink-300 bg-pink-950/80 border border-pink-400/40 px-2.5 py-0.5 rounded-full">Conteúdo & Netiqueta</span>
+                            <span
+                                class="text-[10px] font-semibold text-pink-300 bg-pink-950/80 border border-pink-400/40 px-2.5 py-0.5 rounded-full">Conteúdo
+                                & Netiqueta</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Curadoria dos conteúdos de netiqueta, convivência digital saudável, sintetização de voz nativa e personalização do robô.
+                            Curadoria dos conteúdos de netiqueta, convivência digital saudável, sintetização de voz
+                            nativa e personalização do robô.
                         </p>
                     </div>
 
                 </div>
 
                 <!-- Rodapé Informativo da Feira -->
-                <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                <div
+                    class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-medium">
                     <span>Feira Cultural de Tecnologia da Informação</span>
                     <span class="text-sky-400 font-semibold">Versão 2.0 · 2026</span>
                 </div>
