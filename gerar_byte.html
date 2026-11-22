@@ -468,7 +468,10 @@
 
                     <!-- Estilo do Fundo de Tela -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Estilo do Fundo de Tela</label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="text-xs font-medium text-slate-300">Estilo e Cores do Fundo de Tela</label>
+                            <span id="theme-label" class="text-[11px] font-bold text-sky-400">Azul Cósmico</span>
+                        </div>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                             <button type="button" class="theme-card-btn active" data-theme="cosmic-blue">
                                 <span class="block text-xs font-bold text-white">Azul Cósmico</span>
@@ -490,6 +493,13 @@
                                 <span class="block text-xs font-bold text-white">Preto Espacial</span>
                                 <span class="block text-[10px] text-slate-400">Minimalista Escuro</span>
                             </button>
+                            <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-700/60 hover:border-slate-500 transition">
+                                <input type="color" id="cfg-bg-picker" value="#051433" class="w-7 h-7 rounded-full cursor-pointer bg-transparent border-0" title="Escolher cor personalizada de fundo">
+                                <div class="leading-tight">
+                                    <span class="block text-xs font-bold text-white">Personalizado</span>
+                                    <span class="block text-[10px] text-slate-400">Qualquer cor</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -638,6 +648,7 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             accentColor: '#2563eb',
             bodyColor: '#f8fafc',
             theme: 'cosmic-blue',
+            customBgColor: null,
             floatingPhrases: [
                 '🤖 Sou o seu robô de lembrança!',
                 '✨ Criado na Feira Cultural de TI!',
@@ -650,51 +661,130 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
         const THEMES = {
             'cosmic-blue': {
                 name: 'Azul Cósmico',
+                bodyBg: '#020617',
                 bg: 'radial-gradient(circle at 50% 15%, #051433 0%, #020b1e 50%, #01040a 100%)',
+                mobileBg: 'radial-gradient(circle at 50% 25%, #071f4a 0%, #030e24 50%, #01040a 100%)',
                 orb1: 'radial-gradient(circle, #0284c7 0%, #1e40af 55%, transparent 75%)',
                 orb2: 'radial-gradient(circle, #2563eb 0%, #0369a1 50%, transparent 75%)',
                 orb3: 'radial-gradient(circle, #0ea5e9 0%, #1d4ed8 45%, transparent 75%)',
-                orb4: 'radial-gradient(circle, #38bdf8 0%, #1e3a8a 60%, transparent 80%)'
+                orb4: 'radial-gradient(circle, #38bdf8 0%, #1e3a8a 60%, transparent 80%)',
+                gridColor: 'rgba(56, 189, 248, 0.05)',
+                primaryColor: '#0284c7',
+                highlightColor: '#38bdf8',
+                primaryGlow: 'rgba(56, 189, 248, 0.35)',
+                fillLight: '0x0ea5e9',
+                rimLight: '0x60a5fa',
+                hemiLight: '0x020b1e'
             },
             'cyber-purple': {
                 name: 'Cyber Roxo',
+                bodyBg: '#080010',
                 bg: 'radial-gradient(circle at 50% 15%, #2e0854 0%, #160228 50%, #080010 100%)',
+                mobileBg: 'radial-gradient(circle at 50% 25%, #3b0764 0%, #1e0338 50%, #080010 100%)',
                 orb1: 'radial-gradient(circle, #9333ea 0%, #4c1d95 55%, transparent 75%)',
                 orb2: 'radial-gradient(circle, #c026d3 0%, #701a75 50%, transparent 75%)',
                 orb3: 'radial-gradient(circle, #a855f7 0%, #581c87 45%, transparent 75%)',
-                orb4: 'radial-gradient(circle, #e879f9 0%, #3b0764 60%, transparent 80%)'
+                orb4: 'radial-gradient(circle, #e879f9 0%, #3b0764 60%, transparent 80%)',
+                gridColor: 'rgba(168, 85, 247, 0.07)',
+                primaryColor: '#7c3aed',
+                highlightColor: '#c084fc',
+                primaryGlow: 'rgba(168, 85, 247, 0.40)',
+                fillLight: '0xa855f7',
+                rimLight: '0xc084fc',
+                hemiLight: '0x160228'
             },
             'matrix-green': {
                 name: 'Matrix Verde',
+                bodyBg: '#000806',
                 bg: 'radial-gradient(circle at 50% 15%, #022c22 0%, #021712 50%, #000806 100%)',
+                mobileBg: 'radial-gradient(circle at 50% 25%, #04382c 0%, #021f18 50%, #000806 100%)',
                 orb1: 'radial-gradient(circle, #10b981 0%, #064e3b 55%, transparent 75%)',
                 orb2: 'radial-gradient(circle, #059669 0%, #047857 50%, transparent 75%)',
                 orb3: 'radial-gradient(circle, #34d399 0%, #065f46 45%, transparent 75%)',
-                orb4: 'radial-gradient(circle, #6ee7b7 0%, #022c22 60%, transparent 80%)'
+                orb4: 'radial-gradient(circle, #6ee7b7 0%, #022c22 60%, transparent 80%)',
+                gridColor: 'rgba(34, 197, 94, 0.07)',
+                primaryColor: '#059669',
+                highlightColor: '#34d399',
+                primaryGlow: 'rgba(52, 211, 153, 0.40)',
+                fillLight: '0x10b981',
+                rimLight: '0x34d399',
+                hemiLight: '0x021712'
             },
             'sunset-neon': {
                 name: 'Sunset Neon',
+                bodyBg: '#0b0104',
                 bg: 'radial-gradient(circle at 50% 15%, #3b0d19 0%, #20040c 50%, #0b0104 100%)',
+                mobileBg: 'radial-gradient(circle at 50% 25%, #4c0d1e 0%, #290410 50%, #0b0104 100%)',
                 orb1: 'radial-gradient(circle, #f97316 0%, #9a3412 55%, transparent 75%)',
                 orb2: 'radial-gradient(circle, #ec4899 0%, #831843 50%, transparent 75%)',
                 orb3: 'radial-gradient(circle, #f43f5e 0%, #9f1239 45%, transparent 75%)',
-                orb4: 'radial-gradient(circle, #fb923c 0%, #4c0519 60%, transparent 80%)'
+                orb4: 'radial-gradient(circle, #fb923c 0%, #4c0519 60%, transparent 80%)',
+                gridColor: 'rgba(244, 63, 94, 0.07)',
+                primaryColor: '#e11d48',
+                highlightColor: '#fb7185',
+                primaryGlow: 'rgba(244, 63, 94, 0.40)',
+                fillLight: '0xf97316',
+                rimLight: '0xf43f5e',
+                hemiLight: '0x20040c'
             },
             'deep-space': {
                 name: 'Preto Espacial',
+                bodyBg: '#000000',
                 bg: 'radial-gradient(circle at 50% 15%, #0f172a 0%, #050811 50%, #000000 100%)',
+                mobileBg: 'radial-gradient(circle at 50% 25%, #1e293b 0%, #0b0f19 50%, #000000 100%)',
                 orb1: 'radial-gradient(circle, #38bdf8 0%, #0f172a 55%, transparent 75%)',
                 orb2: 'radial-gradient(circle, #64748b 0%, #1e293b 50%, transparent 75%)',
                 orb3: 'radial-gradient(circle, #0284c7 0%, #0f172a 45%, transparent 75%)',
-                orb4: 'radial-gradient(circle, #94a3b8 0%, #020617 60%, transparent 80%)'
+                orb4: 'radial-gradient(circle, #94a3b8 0%, #020617 60%, transparent 80%)',
+                gridColor: 'rgba(148, 163, 184, 0.05)',
+                primaryColor: '#334155',
+                highlightColor: '#94a3b8',
+                primaryGlow: 'rgba(148, 163, 184, 0.35)',
+                fillLight: '0x94a3b8',
+                rimLight: '0x64748b',
+                hemiLight: '0x050811'
             }
         };
+
+        function createCustomTheme(hexColor) {
+            let c = hexColor.replace('#', '');
+            if (c.length === 3) c = c.split('').map(x => x + x).join('');
+            const r = parseInt(c.substring(0, 2), 16) || 15;
+            const g = parseInt(c.substring(2, 4), 16) || 23;
+            const b = parseInt(c.substring(4, 6), 16) || 42;
+
+            const rDark = Math.round(r * 0.22), gDark = Math.round(g * 0.22), bDark = Math.round(b * 0.22);
+            const rDeep = Math.round(r * 0.08), gDeep = Math.round(g * 0.08), bDeep = Math.round(b * 0.08);
+
+            const bg = `radial-gradient(circle at 50% 15%, rgb(${rDark},${gDark},${bDark}) 0%, rgb(${rDeep},${gDeep},${bDeep}) 50%, #01040a 100%)`;
+            const mobileBg = `radial-gradient(circle at 50% 25%, rgb(${rDark},${gDark},${bDark}) 0%, rgb(${rDeep},${gDeep},${bDeep}) 50%, #01040a 100%)`;
+
+            const hexStr = '0x' + c;
+            return {
+                name: 'Personalizado',
+                bodyBg: `rgb(${rDeep},${gDeep},${bDeep})`,
+                bg: bg,
+                mobileBg: mobileBg,
+                orb1: `radial-gradient(circle, ${hexColor} 0%, rgb(${rDark},${gDark},${bDark}) 55%, transparent 75%)`,
+                orb2: `radial-gradient(circle, ${hexColor} 0%, rgb(${rDeep},${gDeep},${bDeep}) 50%, transparent 75%)`,
+                orb3: `radial-gradient(circle, ${hexColor} 0%, rgb(${rDark},${gDark},${bDark}) 45%, transparent 75%)`,
+                orb4: `radial-gradient(circle, ${hexColor} 0%, #01040a 60%, transparent 80%)`,
+                gridColor: `rgba(${r}, ${g}, ${b}, 0.08)`,
+                primaryColor: hexColor,
+                highlightColor: hexColor,
+                primaryGlow: `rgba(${r}, ${g}, ${b}, 0.40)`,
+                fillLight: hexStr,
+                rimLight: hexStr,
+                hemiLight: `0x${rDeep.toString(16).padStart(2,'0')}${gDeep.toString(16).padStart(2,'0')}${bDeep.toString(16).padStart(2,'0')}`
+            };
+        }
 
         // ── Three.js Preview Setup ──
         let previewScene, previewCamera, previewRenderer, previewControls;
         let previewClock = new THREE.Clock();
         let previewRightArm, previewHead, previewTorso;
         let previewEyeMat, previewRingMat, previewAccentMat, previewBodyMat;
+        let previewHemi, previewFillLight, previewRimLight;
         let isPreviewWaving = false, previewWaveTime = 0;
 
         function createPreviewShadowTexture() {
@@ -743,21 +833,21 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             previewControls.update();
 
             // Luzes
-            const hemi = new THREE.HemisphereLight(0xffffff, 0x020b1e, 0.95);
-            previewScene.add(hemi);
+            previewHemi = new THREE.HemisphereLight(0xffffff, 0x020b1e, 0.95);
+            previewScene.add(previewHemi);
 
             const mainLight = new THREE.DirectionalLight(0xffffff, 0.95);
             mainLight.position.set(3.5, 6.5, 4.5);
             mainLight.castShadow = true;
             previewScene.add(mainLight);
 
-            const fillLight = new THREE.DirectionalLight(0x0ea5e9, 0.55);
-            fillLight.position.set(-4.5, 2.5, 3);
-            previewScene.add(fillLight);
+            previewFillLight = new THREE.DirectionalLight(0x0ea5e9, 0.55);
+            previewFillLight.position.set(-4.5, 2.5, 3);
+            previewScene.add(previewFillLight);
 
-            const rimLight = new THREE.DirectionalLight(0x60a5fa, 0.75);
-            rimLight.position.set(0, 4, -5);
-            previewScene.add(rimLight);
+            previewRimLight = new THREE.DirectionalLight(0x60a5fa, 0.75);
+            previewRimLight.position.set(0, 4, -5);
+            previewScene.add(previewRimLight);
 
             buildPreviewRobot();
             animatePreview();
