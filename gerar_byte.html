@@ -493,13 +493,7 @@
                                 <span class="block text-xs font-bold text-white">Preto Espacial</span>
                                 <span class="block text-[10px] text-slate-400">Minimalista Escuro</span>
                             </button>
-                            <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-700/60 hover:border-slate-500 transition">
-                                <input type="color" id="cfg-bg-picker" value="#051433" class="w-7 h-7 rounded-full cursor-pointer bg-transparent border-0" title="Escolher cor personalizada de fundo">
-                                <div class="leading-tight">
-                                    <span class="block text-xs font-bold text-white">Personalizado</span>
-                                    <span class="block text-[10px] text-slate-400">Qualquer cor</span>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -1170,6 +1164,8 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
                     document.querySelectorAll('.theme-card-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     config.theme = btn.dataset.theme;
+                    const themeLabel = document.getElementById('theme-label');
+                    if (themeLabel) themeLabel.textContent = THEMES[config.theme]?.name || 'Personalizado';
                     updatePreviewColors();
                 });
             });
