@@ -10,11 +10,12 @@ computador após baixar os arquivos do GitHub.
 PARTE 1 — O QUE É CADA ARQUIVO?
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  index.html          → Página principal com o robô 3D BYTE interativo
+  index.html          → Página principal com o robô 3D BYTE interativo e vídeo de abertura
   creditos.html       → Página de créditos da equipe
   gerar_byte.html     → Personalizador: crie seu próprio robô e baixe o HTML
   gesture_controller.py → Sistema de visão computacional (Python + câmera)
   Byte.jfif           → Ícone/logo do projeto (aparece na aba do navegador)
+  8087311-uhd_2160_3840_25fps.mp4 → Vídeo de introdução cinematográfica do index.html
   hand_landmarker.task → Modelo de IA para detectar mãos (MediaPipe)
   requirements.txt    → Lista de bibliotecas Python necessárias
   Efeito Sonoro de Transição - [Crescendo Reverse 1].mp3 → Áudio da transição

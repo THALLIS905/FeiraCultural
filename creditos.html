@@ -155,6 +155,35 @@
             }
         }
 
+        /* ── Otimizações Críticas de Performance para Mobile ── */
+        @media (max-width: 768px) {
+            /* Desativa orbes com blur de 85px animados continuamente que sobrecarregavam a GPU móvel */
+            .glow-orb {
+                display: none !important;
+            }
+            .ambient-mesh {
+                background: radial-gradient(circle at 50% 25%, #071f4a 0%, #030e24 50%, #01040a 100%) !important;
+            }
+            .cyber-grid {
+                opacity: 0.35 !important;
+                background-size: 48px 48px !important;
+            }
+
+            /* Reduz custo de renderização do Glassmorphism */
+            .glass-panel {
+                -webkit-backdrop-filter: blur(14px) !important;
+                backdrop-filter: blur(14px) !important;
+                background: rgba(11, 20, 38, 0.90) !important;
+            }
+
+            /* Elimina nested backdrop-filters nos cards que causavam lag ao rolar */
+            .glass-card {
+                -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+                background: rgba(15, 23, 42, 0.88) !important;
+            }
+        }
+
         /* ── Efeito Apple Frosted Glass Escuro (Preto/Azul/Cinza/Branco) ── */
         .glass-panel {
             background: rgba(11, 20, 38, 0.72);
@@ -496,7 +525,8 @@
             let width = 0;
             let height = 0;
             let sparks = [];
-            const MAX_SPARKS = 45;
+            const isMobile = window.innerWidth < 768;
+            const MAX_SPARKS = isMobile ? 16 : 45;
 
             // Paleta de cores das faíscas: Branco, Azul Elétrico, Ciano Neon
             const SPARK_COLORS = [
@@ -511,9 +541,10 @@
                 const rect = stage.getBoundingClientRect();
                 width = rect.width;
                 height = rect.height;
-                canvas.width = width * window.devicePixelRatio;
-                canvas.height = height * window.devicePixelRatio;
-                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                ctx.scale(dpr, dpr);
             }
 
             window.addEventListener('resize', resizeCanvas);

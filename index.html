@@ -159,6 +159,48 @@
             }
         }
 
+        /* ── Otimizações Críticas de Performance para Mobile ── */
+        @media (max-width: 768px) {
+            /* Desativa orbes com blur de 85px animados continuamente que sobrecarregavam a GPU móvel */
+            .glow-orb {
+                display: none !important;
+            }
+            .ambient-mesh {
+                background: radial-gradient(circle at 50% 25%, #071f4a 0%, #030e24 50%, #01040a 100%) !important;
+            }
+            .cyber-grid {
+                opacity: 0.35 !important;
+                background-size: 48px 48px !important;
+            }
+
+            /* Reduz custo de renderização do Glassmorphism */
+            .apple-glass {
+                -webkit-backdrop-filter: blur(14px) !important;
+                backdrop-filter: blur(14px) !important;
+                background: rgba(11, 20, 38, 0.88) !important;
+            }
+            .apple-glass-card {
+                -webkit-backdrop-filter: blur(10px) !important;
+                backdrop-filter: blur(10px) !important;
+                background: rgba(15, 23, 42, 0.85) !important;
+            }
+
+            /* Elimina nested backdrop-filters no modal que causavam lag ao deslizar */
+            .info-point {
+                -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+                background: rgba(15, 23, 42, 0.88) !important;
+            }
+
+            #detail-modal {
+                -webkit-backdrop-filter: blur(16px) !important;
+                backdrop-filter: blur(16px) !important;
+                background: rgba(11, 20, 38, 0.94) !important;
+                overscroll-behavior: contain;
+                touch-action: pan-y;
+            }
+        }
+
         /* ── Canvas 3D ── */
         #canvas-container {
             position: fixed;
@@ -516,6 +558,28 @@
 </head>
 
 <body>
+
+    <!-- ── Overlay de Vídeo de Abertura (Intro Cinematográfica) ── -->
+    <div id="intro-video-overlay"
+        style="position:fixed; inset:0; background:#000000; z-index:10000; display:flex; align-items:center; justify-content:center; overflow:hidden; transition:opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1);">
+        <video id="intro-video" playsinline webkit-playsinline autoplay preload="auto"
+            style="width:100%; height:100%; object-fit:cover;">
+            <source src="8087311-uhd_2160_3840_25fps.mp4" type="video/mp4">
+        </video>
+
+        <!-- Botão Pular Vídeo -->
+        <button id="btn-skip-intro" class="apple-glass"
+            style="position:absolute; top:calc(env(safe-area-inset-top, 16px) + 16px); right:20px; z-index:10001; padding:9px 20px; border-radius:999px; font-size:0.80rem; font-weight:700; color:#ffffff; cursor:pointer; display:flex; align-items:center; gap:8px; border:1px solid rgba(56, 189, 248, 0.45); background:rgba(11, 20, 38, 0.78); box-shadow:0 10px 28px rgba(0,0,0,0.7);">
+            <span>Pular Introdução</span>
+            <span style="font-size:0.75rem; opacity:0.8;">✕</span>
+        </button>
+
+        <!-- Botão Ativar Áudio (Caso o navegador bloqueie autoplay com som) -->
+        <button id="btn-unmute-intro" class="apple-glass"
+            style="position:absolute; bottom:calc(env(safe-area-inset-bottom, 16px) + 24px); left:50%; transform:translateX(-50%); z-index:10001; padding:9px 22px; border-radius:999px; font-size:0.80rem; font-weight:600; color:#38bdf8; cursor:pointer; display:none; align-items:center; gap:8px; border:1px solid rgba(56, 189, 248, 0.35); background:rgba(11, 20, 38, 0.88);">
+            <span>🔊 Ativar Som do Vídeo</span>
+        </button>
+    </div>
 
     <!-- Fundo Vivo em Azul e Preto (Mesmo do creditos.html) -->
     <div class="ambient-mesh">
@@ -1061,35 +1125,113 @@
             return IDLE_ACTION_LIST[nextIdx];
         }
 
+        /* ================================================================
+           SISTEMA DE VÍDEO INTRODUTÓRIO & INICIALIZAÇÃO
+        ================================================================ */
+        let introFinished = false;
+
+        function finishIntro() {
+            if (introFinished) return;
+            introFinished = true;
+
+            const overlay = document.getElementById('intro-video-overlay');
+            const video = document.getElementById('intro-video');
+            if (video) {
+                try { video.pause(); } catch (e) { }
+            }
+
+            if (overlay) {
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 800);
+            }
+
+            // Mensagem de boas-vindas do BYTE somente após a conclusão do vídeo
+            setTimeout(() => {
+                spawnRobotBubble('wave');
+                if (soundEnabled) {
+                    speakText('Olá! Eu sou o BYTE! Selecione um dos temas abaixo para conferir o conteúdo da feira.');
+                }
+            }, 500);
+        }
+
+        function setupIntroVideo() {
+            const video = document.getElementById('intro-video');
+            const btnSkip = document.getElementById('btn-skip-intro');
+            const btnUnmute = document.getElementById('btn-unmute-intro');
+
+            if (btnSkip) {
+                btnSkip.addEventListener('click', finishIntro);
+            }
+
+            if (video) {
+                video.addEventListener('ended', finishIntro);
+
+                // Tenta tocar com som nativo
+                const playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Se o navegador móvel restringir autoplay com som:
+                        video.muted = true;
+                        video.play().then(() => {
+                            if (btnUnmute) {
+                                btnUnmute.style.display = 'flex';
+                                btnUnmute.addEventListener('click', () => {
+                                    video.muted = false;
+                                    btnUnmute.style.display = 'none';
+                                });
+                            }
+                        }).catch(() => {
+                            // Se nem mudo rodar automaticamente, toca ao primeiro toque na tela
+                            const startOnFirstTap = () => {
+                                video.play();
+                                window.removeEventListener('pointerdown', startOnFirstTap);
+                            };
+                            window.addEventListener('pointerdown', startOnFirstTap, { once: true });
+                        });
+                    });
+                }
+            } else {
+                finishIntro();
+            }
+        }
+
         window.onload = function () {
             initThreeJS();
             buildRobot();
             setupEvents();
             animate();
             renderDockButtons();
-
-            // Mensagem sutil de abertura
-            setTimeout(() => {
-                spawnRobotBubble('wave');
-                if (soundEnabled) {
-                    speakText('Olá! Eu sou o BYTE! Selecione um dos temas abaixo para conferir o conteúdo da feira.');
-                }
-            }, 700);
+            setupIntroVideo();
         };
 
         function initThreeJS() {
             const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
 
+            const isMobile = window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
             camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.1, 100);
-            const isMobile = window.innerWidth < 768;
             camera.position.set(0, isMobile ? 1.55 : 1.35, isMobile ? 7.2 : 6.2);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer = new THREE.WebGLRenderer({
+                antialias: !isMobile,
+                alpha: true,
+                powerPreference: 'high-performance'
+            });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            // No mobile limita pixelRatio a 1.25 para evitar sobrecarga de GPU em telas 3x/4x
+            renderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
+
+            // No mobile desativa shadowMap dinâmico para garantir fluidez máxima de 60fps constante
+            if (isMobile) {
+                renderer.shadowMap.enabled = false;
+            } else {
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            }
+
             renderer.outputEncoding = THREE.sRGBEncoding;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.toneMappingExposure = 1.08;
@@ -1332,12 +1474,15 @@
                 state.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
             });
 
-            window.addEventListener('touchmove', (e) => {
-                if (e.touches.length > 0) {
-                    state.mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
-                    state.mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
-                }
-            }, { passive: true });
+            // No mobile, rastreia touch apenas sobre o canvas 3D para não concorrer com a rolagem suave dos textos
+            if (container) {
+                container.addEventListener('touchmove', (e) => {
+                    if (e.touches.length > 0) {
+                        state.mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+                        state.mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+                    }
+                }, { passive: true });
+            }
 
             // Reação tátil: tocar/clicar no robô ocioso dispara um aceno ou pulo alegre instantâneo
             if (container) {

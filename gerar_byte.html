@@ -123,6 +123,34 @@
             100% { opacity: 0.65; transform: scale(1.15); }
         }
 
+        /* ── Otimizações Críticas de Performance para Mobile ── */
+        @media (max-width: 768px) {
+            /* Desativa orbes com blur de 85px animados continuamente que sobrecarregavam a GPU móvel */
+            .glow-orb {
+                display: none !important;
+            }
+            .ambient-mesh {
+                background: radial-gradient(circle at 50% 25%, #071f4a 0%, #030e24 50%, #01040a 100%) !important;
+            }
+            .cyber-grid {
+                opacity: 0.35 !important;
+                background-size: 48px 48px !important;
+            }
+
+            /* Reduz custo de renderização do Glassmorphism */
+            .glass-panel {
+                -webkit-backdrop-filter: blur(14px) !important;
+                backdrop-filter: blur(14px) !important;
+                background: rgba(11, 20, 38, 0.90) !important;
+            }
+
+            .glass-card {
+                -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+                background: rgba(15, 23, 42, 0.88) !important;
+            }
+        }
+
         /* ── Estilo Dark Apple Glass ── */
         .glass-panel {
             background: rgba(11, 20, 38, 0.75);
@@ -651,14 +679,19 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             const container = document.getElementById('preview-canvas-container');
             if (!container) return;
 
+            const isMobile = window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
             previewScene = new THREE.Scene();
             previewCamera = new THREE.PerspectiveCamera(36, container.clientWidth / container.clientHeight, 0.1, 100);
             previewCamera.position.set(0, 1.45, 6.2);
 
-            previewRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            previewRenderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' });
             previewRenderer.setSize(container.clientWidth, container.clientHeight);
-            previewRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            previewRenderer.shadowMap.enabled = true;
+            previewRenderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
+            if (isMobile) {
+                previewRenderer.shadowMap.enabled = false;
+            } else {
+                previewRenderer.shadowMap.enabled = true;
+            }
             previewRenderer.outputEncoding = THREE.sRGBEncoding;
             previewRenderer.toneMapping = THREE.ACESFilmicToneMapping;
             previewRenderer.toneMappingExposure = 1.1;
@@ -1040,6 +1073,15 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
         #canvas-container { position: fixed; inset: 0; width: 100vw; height: 100vh; cursor: grab; z-index: 1; }
         #canvas-container:active { cursor: grabbing; }
 
+        @media (max-width: 768px) {
+            .glow-orb { display: none !important; }
+            .ambient-mesh { background: radial-gradient(circle at 50% 25%, #071f4a 0%, #030e24 50%, #01040a 100%) !important; }
+            .cyber-grid { opacity: 0.35 !important; }
+            .apple-glass { -webkit-backdrop-filter: blur(14px) !important; backdrop-filter: blur(14px) !important; background: rgba(11, 20, 38, 0.90) !important; }
+            .info-point { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: rgba(15, 23, 42, 0.88) !important; }
+            #detail-modal { -webkit-backdrop-filter: blur(16px) !important; backdrop-filter: blur(16px) !important; background: rgba(11, 20, 38, 0.94) !important; overscroll-behavior: contain; }
+        }
+
         .apple-glass {
             background: rgba(11, 20, 38, 0.74);
             -webkit-backdrop-filter: blur(36px) saturate(210%);
@@ -1273,10 +1315,11 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             const isMobile = window.innerWidth < 768;
             camera.position.set(0, isMobile ? 1.55 : 1.35, isMobile ? 7.2 : 6.2);
 
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            const isMobile = window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
+            renderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
+            if (isMobile) { renderer.shadowMap.enabled = false; } else { renderer.shadowMap.enabled = true; }
             renderer.outputEncoding = THREE.sRGBEncoding;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             container.appendChild(renderer.domElement);
