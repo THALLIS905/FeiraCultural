@@ -435,7 +435,7 @@
                     <!-- Cor dos Acentos do Corpo (Gola, Detalhes) -->
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
-                            <label class="text-xs font-medium text-slate-300">Cor dos Acentos do Corpo</label>
+                            <label class="text-xs font-medium text-slate-300">Cor dos Acentos do Corpo (Gola, Boné e Detalhes)</label>
                             <span id="accent-color-label" class="text-[11px] font-bold text-blue-400">Azul Real</span>
                         </div>
                         <div class="flex items-center gap-2 flex-wrap">
@@ -446,6 +446,23 @@
                             <button type="button" class="color-chip-accent" style="background:#e11d48;" data-color="#e11d48" data-label="Rubro"></button>
                             <button type="button" class="color-chip-accent" style="background:#334155;" data-color="#334155" data-label="Grafite"></button>
                             <input type="color" id="cfg-accent-picker" value="#2563eb" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-0" title="Cor personalizada">
+                        </div>
+                    </div>
+
+                    <!-- Cor da Carcaça do Robô (Corpo e Cabeça) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="text-xs font-medium text-slate-300">Cor da Carcaça do Robô (Corpo & Cabeça)</label>
+                            <span id="body-color-label" class="text-[11px] font-bold text-slate-300">Branco Tech</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button type="button" class="color-chip-body active" style="background:#f8fafc;" data-color="#f8fafc" data-label="Branco Tech"></button>
+                            <button type="button" class="color-chip-body" style="background:#18181b;" data-color="#18181b" data-label="Preto Cyber"></button>
+                            <button type="button" class="color-chip-body" style="background:#475569;" data-color="#475569" data-label="Cinza Titânio"></button>
+                            <button type="button" class="color-chip-body" style="background:#0f172a;" data-color="#0f172a" data-label="Azul Noturno"></button>
+                            <button type="button" class="color-chip-body" style="background:#ca8a04;" data-color="#ca8a04" data-label="Dourado Tech"></button>
+                            <button type="button" class="color-chip-body" style="background:#0284c7;" data-color="#0284c7" data-label="Ciano Elétrico"></button>
+                            <input type="color" id="cfg-body-picker" value="#f8fafc" class="w-8 h-8 rounded-full cursor-pointer bg-transparent border-0" title="Cor personalizada">
                         </div>
                     </div>
 
@@ -512,6 +529,10 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
                             <input type="text" class="card-speech-input glass-input text-xs text-sky-200" value="Aprender sobre tecnologia e jogos na escola é muito divertido e abre portas para o futuro!" placeholder="O que o robô vai falar ao abrir este card">
                         </div>
                     </div>
+
+                    <button type="button" id="btn-add-card" class="w-full py-2.5 rounded-xl text-xs font-semibold text-sky-300 bg-sky-950/50 hover:bg-sky-900/60 border border-dashed border-sky-400/40 transition flex items-center justify-center gap-1.5">
+                        <span>＋ Adicionar Mais um Card de Conteúdo</span>
+                    </button>
                 </div>
 
                 <!-- 4. Frases e Emojis Flutuantes do Robô -->
@@ -615,6 +636,7 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             subtitle: 'Feira Cultural de TI',
             eyeColor: '#38bdf8',
             accentColor: '#2563eb',
+            bodyColor: '#f8fafc',
             theme: 'cosmic-blue',
             floatingPhrases: [
                 '🤖 Sou o seu robô de lembrança!',
@@ -672,8 +694,21 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
         let previewScene, previewCamera, previewRenderer, previewControls;
         let previewClock = new THREE.Clock();
         let previewRightArm, previewHead, previewTorso;
-        let previewEyeMat, previewRingMat, previewAccentMat;
+        let previewEyeMat, previewRingMat, previewAccentMat, previewBodyMat;
         let isPreviewWaving = false, previewWaveTime = 0;
+
+        function createPreviewShadowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            const g = ctx.createRadialGradient(128, 128, 10, 128, 128, 124);
+            g.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
+            g.addColorStop(0.5, 'rgba(2, 6, 23, 0.20)');
+            g.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, 256, 256);
+            return new THREE.CanvasTexture(canvas);
+        }
 
         function initPreview3D() {
             const container = document.getElementById('preview-canvas-container');
@@ -750,7 +785,7 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
         }
 
         function buildPreviewRobot() {
-            const whitePlasticMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.28, metalness: 0.05 });
+            previewBodyMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(config.bodyColor), roughness: 0.28, metalness: 0.05 });
             const pedestalMat = new THREE.MeshStandardMaterial({ color: 0x0b1329, roughness: 0.35, metalness: 0.4 });
             const darkJointMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.45, metalness: 0.3 });
             const lightGrayMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.4, metalness: 0.2 });
@@ -760,7 +795,7 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             previewRingMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(config.eyeColor) });
             previewAccentMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(config.accentColor), roughness: 0.30, metalness: 0.1 });
 
-            // Base
+            // Base & Sombras
             const baseGroup = new THREE.Group();
             previewScene.add(baseGroup);
 
@@ -773,6 +808,17 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             ring.position.y = 0.11;
             baseGroup.add(ring);
 
+            const floorShadowMat = new THREE.MeshBasicMaterial({ map: createPreviewShadowTexture(), transparent: true, depthWrite: false });
+            const floorShadow = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 3.2), floorShadowMat);
+            floorShadow.rotation.x = -Math.PI / 2;
+            floorShadow.position.y = 0.002;
+            baseGroup.add(floorShadow);
+
+            const baseShadowMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.35, 1.35), floorShadowMat);
+            baseShadowMesh.rotation.x = -Math.PI / 2;
+            baseShadowMesh.position.y = 0.113;
+            baseGroup.add(baseShadowMesh);
+
             // Robô
             const robotRoot = new THREE.Group();
             robotRoot.position.y = 0.24;
@@ -781,9 +827,9 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             previewTorso = new THREE.Group();
             robotRoot.add(previewTorso);
 
-            const bodyGeo = new THREE.SphereGeometry(0.64, 36, 36);
+            const bodyGeo = new THREE.SphereGeometry(0.64, 40, 40);
             bodyGeo.scale(0.96, 1.28, 0.90);
-            const bodyMesh = new THREE.Mesh(bodyGeo, whitePlasticMat);
+            const bodyMesh = new THREE.Mesh(bodyGeo, previewBodyMat);
             bodyMesh.position.y = 0.78;
             previewTorso.add(bodyMesh);
 
@@ -798,6 +844,24 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             bibMesh.scale.set(1, 1, 0.45);
             previewTorso.add(bibMesh);
 
+            const bibTipMesh = new THREE.Mesh(new THREE.SphereGeometry(0.105, 20, 20), previewAccentMat);
+            bibTipMesh.position.set(0, 1.09, 0.545);
+            bibTipMesh.scale.set(1, 0.9, 0.45);
+            previewTorso.add(bibTipMesh);
+
+            // Encaixes dos ombros
+            [-1, 1].forEach(side => {
+                const socketMesh = new THREE.Mesh(new THREE.SphereGeometry(0.22, 20, 20), lightGrayMat);
+                socketMesh.position.set(side * 0.54, 1.14, 0);
+                socketMesh.scale.set(0.5, 1.1, 0.95);
+                previewTorso.add(socketMesh);
+            });
+
+            // Pescoço
+            const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.18, 28), darkJointMat);
+            neckMesh.position.y = 1.54;
+            previewTorso.add(neckMesh);
+
             // Braço Direito (para aceno)
             previewRightArm = new THREE.Group();
             previewRightArm.position.set(0.65, 1.18, 0);
@@ -810,7 +874,13 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
 
             const armGeo = new THREE.SphereGeometry(0.15, 24, 24);
             armGeo.scale(0.82, 2.55, 0.95);
-            armBody.add(new THREE.Mesh(armGeo, whitePlasticMat));
+            armBody.add(new THREE.Mesh(armGeo, previewBodyMat));
+
+            const innerGeo = new THREE.SphereGeometry(0.135, 20, 20);
+            innerGeo.scale(0.65, 2.25, 0.78);
+            const innerMeshR = new THREE.Mesh(innerGeo, previewAccentMat);
+            innerMeshR.position.set(-0.045, -0.02, 0);
+            armBody.add(innerMeshR);
             previewTorso.add(previewRightArm);
 
             // Braço Esquerdo
@@ -821,7 +891,11 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             leftArmBody.position.set(-0.11, -0.34, 0.02);
             leftArmBody.rotation.z = 0.14;
             leftArm.add(leftArmBody);
-            leftArmBody.add(new THREE.Mesh(armGeo, whitePlasticMat));
+            leftArmBody.add(new THREE.Mesh(armGeo, previewBodyMat));
+
+            const innerMeshL = new THREE.Mesh(innerGeo, previewAccentMat);
+            innerMeshL.position.set(0.045, -0.02, 0);
+            leftArmBody.add(innerMeshL);
             previewTorso.add(leftArm);
 
             // Cabeça
@@ -829,9 +903,9 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             previewHead.position.set(0, 1.62, 0);
             previewTorso.add(previewHead);
 
-            const headGeo = new THREE.SphereGeometry(0.74, 36, 36);
+            const headGeo = new THREE.SphereGeometry(0.74, 40, 40);
             headGeo.scale(1.08, 0.92, 0.96);
-            const headMesh = new THREE.Mesh(headGeo, whitePlasticMat);
+            const headMesh = new THREE.Mesh(headGeo, previewBodyMat);
             headMesh.position.y = 0.56;
             previewHead.add(headMesh);
 
@@ -840,6 +914,21 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             const topCap = new THREE.Mesh(topCapGeo, previewAccentMat);
             topCap.position.set(0, 1.09, -0.02);
             previewHead.add(topCap);
+
+            // Orelhas
+            [-1, 1].forEach(side => {
+                const earGroup = new THREE.Group();
+                earGroup.position.set(side * 0.78, 0.54, 0);
+                const earInnerGeo = new THREE.CylinderGeometry(0.17, 0.19, 0.08, 20);
+                earInnerGeo.rotateZ(Math.PI / 2);
+                earGroup.add(new THREE.Mesh(earInnerGeo, darkJointMat));
+                const earOuterGeo = new THREE.SphereGeometry(0.18, 20, 20);
+                earOuterGeo.scale(0.45, 1.05, 0.95);
+                const earOuterMesh = new THREE.Mesh(earOuterGeo, previewBodyMat);
+                earOuterMesh.position.x = side * 0.045;
+                earGroup.add(earOuterMesh);
+                previewHead.add(earGroup);
+            });
 
             // Visor & Olhos
             const visorGroup = new THREE.Group();
@@ -903,6 +992,7 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             if (previewEyeMat) previewEyeMat.color.set(config.eyeColor);
             if (previewRingMat) previewRingMat.color.set(config.eyeColor);
             if (previewAccentMat) previewAccentMat.color.set(config.accentColor);
+            if (previewBodyMat) previewBodyMat.color.set(config.bodyColor);
 
             // Atualiza Fundo
             const th = THEMES[config.theme] || THEMES['cosmic-blue'];
@@ -963,6 +1053,27 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
                 updatePreviewColors();
             });
 
+            // Seletor de cores da carcaça do corpo
+            document.querySelectorAll('.color-chip-body').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.color-chip-body').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    config.bodyColor = btn.dataset.color;
+                    document.getElementById('body-color-label').textContent = btn.dataset.label;
+                    document.getElementById('cfg-body-picker').value = config.bodyColor;
+                    updatePreviewColors();
+                });
+            });
+
+            const bodyPicker = document.getElementById('cfg-body-picker');
+            if (bodyPicker) {
+                bodyPicker.addEventListener('input', (e) => {
+                    config.bodyColor = e.target.value;
+                    document.getElementById('body-color-label').textContent = 'Personalizado';
+                    updatePreviewColors();
+                });
+            }
+
             // Seletor de Temas de Fundo
             document.querySelectorAll('.theme-card-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -972,6 +1083,29 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
                     updatePreviewColors();
                 });
             });
+
+            // Adicionar novos cards dinamicamente
+            const btnAddCard = document.getElementById('btn-add-card');
+            if (btnAddCard) {
+                btnAddCard.addEventListener('click', () => {
+                    const cardsList = document.getElementById('cards-config-list');
+                    const nextNum = cardsList.querySelectorAll('.glass-card').length + 1;
+                    const newCard = document.createElement('div');
+                    newCard.className = 'glass-card p-4 rounded-2xl space-y-2';
+                    newCard.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-white">Card ${nextNum}</span>
+                            <span class="text-[10px] text-sky-300 bg-sky-950/80 px-2 py-0.5 rounded-full border border-sky-400/30">Botão ${nextNum}</span>
+                        </div>
+                        <input type="text" class="card-title-input glass-input text-xs" value="Meu Tópico ${nextNum}" placeholder="Título do Card">
+                        <textarea class="card-points-input glass-input text-xs h-16 resize-none" placeholder="Frases que aparecem no card (uma por linha)">Frase de destaque sobre o tema.
+Outro ponto importante do meu projeto.
+Criado na Feira Cultural de TI!</textarea>
+                        <input type="text" class="card-speech-input glass-input text-xs text-sky-200" value="Este é o tópico ${nextNum} do meu robô interativo!" placeholder="O que o robô vai falar ao abrir este card">
+                    `;
+                    cardsList.appendChild(newCard);
+                });
+            }
 
             // Botão de Aceno no Preview
             document.getElementById('btn-trigger-preview-wave').addEventListener('click', () => {
@@ -992,6 +1126,10 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
         function generateAndDownloadCustomByteHTML() {
             const robotName = (document.getElementById('cfg-robot-name').value.trim() || 'MEU-ROBO').toUpperCase();
             const robotSub = document.getElementById('cfg-robot-sub').value.trim() || 'Feira Cultural de TI';
+            const eyeColor = config.eyeColor || '#38bdf8';
+            const accentColor = config.accentColor || '#2563eb';
+            const bodyColor = config.bodyColor || '#f8fafc';
+            const themeData = THEMES[config.theme] || THEMES['cosmic-blue'];
 
             // Coleta os cards configurados
             const cardDoms = document.querySelectorAll('#cards-config-list .glass-card');
@@ -1020,9 +1158,7 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
                 '🚀 Aprender tecnologia é demais!'
             ];
 
-            const themeData = THEMES[config.theme] || THEMES['cosmic-blue'];
-
-            // Monta o arquivo HTML autônomo e autocontido
+            // Monta o arquivo HTML autônomo e autocontido com o robô 3D completo e customizado
             const generatedHTML = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1142,11 +1278,11 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
         }
         .point-text { font-size: 0.84rem; line-height: 1.55; color: #e2e8f0; margin: 0; }
 
-        /* Balões Flutuantes com Emojis */
+        /* Balões Flutuantes Acima do Robô com Z-Index Elevado */
         .robot-floating-bubble {
-            position: absolute; background: rgba(11, 20, 38, 0.88); -webkit-backdrop-filter: blur(24px);
-            backdrop-filter: blur(24px); border: 1px solid rgba(56, 189, 248, 0.45);
-            box-shadow: 0 14px 35px -5px rgba(2, 6, 23, 0.75), 0 0 20px -2px rgba(56, 189, 248, 0.35);
+            position: absolute; background: rgba(11, 20, 38, 0.92); -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(24px); border: 1px solid rgba(56, 189, 248, 0.50);
+            box-shadow: 0 14px 35px -5px rgba(2, 6, 23, 0.85), 0 0 20px -2px rgba(56, 189, 248, 0.40);
             border-radius: 9999px; padding: 8px 16px; display: inline-flex; align-items: center; gap: 8px;
             font-size: 0.80rem; font-weight: 600; color: #ffffff; pointer-events: none; user-select: none;
             white-space: nowrap; animation: bubblePopFloat 3.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -1199,6 +1335,10 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
 
     <script>
         const ROBOT_NAME = "${robotName}";
+        const ROBOT_SUB = "${robotSub}";
+        const EYE_COLOR = "${eyeColor}";
+        const ACCENT_COLOR = "${accentColor}";
+        const BODY_COLOR = "${bodyColor}";
         const TOPICS = ${JSON.stringify(customTopics, null, 2)};
         const FLOATING_PHRASES = ${JSON.stringify(floatingPhrases, null, 2)};
 
@@ -1227,23 +1367,28 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             synth.speak(utter);
         }
 
+        let lastBubbleTime = 0;
         function spawnBubble(textOverride) {
             const container = document.getElementById('robot-bubbles-container');
             if (!container) return;
+            const now = Date.now();
+            if (now - lastBubbleTime < 1600 && !textOverride) return;
+            lastBubbleTime = now;
+
             const txt = textOverride || FLOATING_PHRASES[Math.floor(Math.random() * FLOATING_PHRASES.length)];
-            const isMobile = window.innerWidth < 768;
+            const isMobileScreen = window.innerWidth < 768;
             const positions = [
-                { x: isMobile ? -60 : -160, y: isMobile ? -140 : -130 },
-                { x: isMobile ? 60 : 160, y: isMobile ? -140 : -130 },
-                { x: isMobile ? -75 : -190, y: isMobile ? -40 : -25 },
-                { x: isMobile ? 75 : 190, y: isMobile ? -40 : -25 },
-                { x: 0, y: isMobile ? -190 : -180 }
+                { x: isMobileScreen ? -55 : -170, y: isMobileScreen ? -185 : -165 },
+                { x: isMobileScreen ? 55 : 170, y: isMobileScreen ? -185 : -165 },
+                { x: isMobileScreen ? -80 : -210, y: isMobileScreen ? -130 : -100 },
+                { x: isMobileScreen ? 80 : 210, y: isMobileScreen ? -130 : -100 },
+                { x: 0, y: isMobileScreen ? -220 : -205 }
             ];
             const p = positions[Math.floor(Math.random() * positions.length)];
             const bubble = document.createElement('div');
             bubble.className = 'robot-floating-bubble';
-            bubble.style.left = \`calc(50% + \${p.x}px)\`;
-            bubble.style.top = \`calc(50% + \${p.y}px)\`;
+            bubble.style.left = 'calc(50% + ' + p.x + 'px)';
+            bubble.style.top = 'calc(50% + ' + p.y + 'px)';
             bubble.textContent = txt;
             container.appendChild(bubble);
             setTimeout(() => { if (bubble.parentNode) bubble.parentNode.removeChild(bubble); }, 3600);
@@ -1270,12 +1415,7 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             if (!topic) return;
             document.getElementById('modal-title').textContent = topic.title;
             const list = document.getElementById('modal-content-list');
-            list.innerHTML = topic.points.map((pt, idx) => \`
-                <div class="info-point">
-                    <span class="point-number">\${String(idx+1).padStart(2, '0')}</span>
-                    <p class="point-text">\${pt}</p>
-                </div>
-            \`).join('');
+            list.innerHTML = topic.points.map((pt, idx) => '<div class="info-point"><span class="point-number">' + String(idx + 1).padStart(2, '0') + '</span><p class="point-text">' + pt + '</p></div>').join('');
             modalBackdrop.classList.add('active');
             detailModal.classList.add('active');
             setRobotMode('thinking');
@@ -1300,77 +1440,134 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
                 : 'ml-1 px-3 py-1 rounded-full text-[11px] font-semibold bg-slate-900/80 border border-slate-700 text-slate-500 transition';
         });
 
-        // Three.js Robô 3D
+        // Three.js Robô 3D Completo
         let scene, camera, renderer, controls;
-        let torsoGroup, headGroup, rightArmPivot, leftArmPivot, cyanEyeMat;
+        let robotRoot, torsoGroup, headGroup, leftArmPivot, rightArmPivot;
+        let leftEyeMesh, rightEyeMesh, cyanEyeMat, baseShadowMesh;
         const clock = new THREE.Clock();
-        const state = { mode: 'idle', idleTimer: 2.0, idleBubbleTimer: 3.5, blinkTimer: 2.5, isBlinking: false, blinkProgress: 0 };
 
-        function setRobotMode(m) { state.mode = m; }
+        const state = {
+            mouse: new THREE.Vector2(0, 0),
+            currentLook: new THREE.Vector2(0, 0),
+            mode: 'idle',
+            blinkTimer: 2.2,
+            isBlinking: false,
+            blinkProgress: 0,
+            isDoubleBlink: false,
+            doubleBlinkPhase: 0,
+            idleAction: 'none',
+            idleTimer: 2.0,
+            idleActionDuration: 0,
+            idleActionTime: 0,
+            idleBubbleTimer: 4.0
+        };
+
+        function setRobotMode(m) {
+            state.mode = m;
+            if (m !== 'idle') {
+                state.idleAction = 'none';
+                state.idleActionTime = 0;
+            } else {
+                state.idleTimer = 1.8 + Math.random() * 2.0;
+            }
+        }
+
+        const IDLE_ACTION_LIST = ['wave', 'lookAround', 'happyBounce', 'headTilt', 'wiggle'];
+        let lastIdleActionIndex = -1;
+
+        function triggerIdleAction(action) {
+            state.idleAction = action;
+            state.idleActionTime = 0;
+            if (action === 'wave') state.idleActionDuration = 3.2;
+            else if (action === 'lookAround') state.idleActionDuration = 3.8;
+            else if (action === 'happyBounce') state.idleActionDuration = 2.4;
+            else if (action === 'headTilt') state.idleActionDuration = 2.8;
+            else if (action === 'wiggle') state.idleActionDuration = 2.6;
+            else state.idleActionDuration = 2.5;
+            spawnBubble();
+        }
+
+        function pickNextIdleAction() {
+            let nextIdx = Math.floor(Math.random() * IDLE_ACTION_LIST.length);
+            if (nextIdx === lastIdleActionIndex) nextIdx = (nextIdx + 1) % IDLE_ACTION_LIST.length;
+            lastIdleActionIndex = nextIdx;
+            return IDLE_ACTION_LIST[nextIdx];
+        }
+
+        function createSoftShadowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            const g = ctx.createRadialGradient(128, 128, 10, 128, 128, 124);
+            g.addColorStop(0, 'rgba(0, 0, 0, 0.65)');
+            g.addColorStop(0.5, 'rgba(2, 6, 23, 0.20)');
+            g.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, 256, 256);
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createCrescentEyeGeometry() {
+            const shape = new THREE.Shape();
+            shape.moveTo(-0.17, -0.03);
+            shape.bezierCurveTo(-0.17, 0.09, -0.08, 0.13, 0, 0.13);
+            shape.bezierCurveTo(0.08, 0.13, 0.17, 0.09, 0.17, -0.03);
+            shape.bezierCurveTo(0.17, -0.07, 0.12, -0.08, 0.08, -0.05);
+            shape.bezierCurveTo(0.03, -0.02, -0.03, -0.02, -0.08, -0.05);
+            shape.bezierCurveTo(-0.12, -0.08, -0.17, -0.07, -0.17, -0.03);
+            const geom = new THREE.ExtrudeGeometry(shape, { depth: 0.015, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.008, bevelThickness: 0.008 });
+            geom.center();
+            return geom;
+        }
 
         function initThreeJS() {
             const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.1, 100);
-            const isMobile = window.innerWidth < 768;
-            camera.position.set(0, isMobile ? 1.55 : 1.35, isMobile ? 7.2 : 6.2);
 
-            const isMobile = window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-            renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' });
+            const isMobileDevice = window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(0, isMobileDevice ? 1.55 : 1.35, isMobileDevice ? 7.2 : 6.2);
+
+            renderer = new THREE.WebGLRenderer({ antialias: !isMobileDevice, alpha: true, powerPreference: 'high-performance' });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
-            if (isMobile) { renderer.shadowMap.enabled = false; } else { renderer.shadowMap.enabled = true; }
+            renderer.setPixelRatio(isMobileDevice ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2));
+            if (isMobileDevice) { renderer.shadowMap.enabled = false; } else { renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; }
             renderer.outputEncoding = THREE.sRGBEncoding;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             container.appendChild(renderer.domElement);
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.target.set(0, 1.15, 0); controls.enableDamping = true;
-            controls.dampingFactor = 0.06; controls.enablePan = false;
-            controls.minDistance = 3.5; controls.maxDistance = 10.0;
+            controls.target.set(0, 1.15, 0);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.06;
+            controls.enablePan = false;
+            controls.minDistance = 3.5;
+            controls.maxDistance = 10.0;
+            controls.maxPolarAngle = Math.PI / 2 + 0.08;
+            controls.minPolarAngle = 0.25;
             controls.update();
 
-            scene.add(new THREE.HemisphereLight(0xffffff, 0x020b1e, 0.95));
-            const dl = new THREE.DirectionalLight(0xffffff, 0.95); dl.position.set(3.5, 6.5, 4.5); scene.add(dl);
-            const fl = new THREE.DirectionalLight(0x0ea5e9, 0.55); fl.position.set(-4.5, 2.5, 3); scene.add(fl);
-            const rl = new THREE.DirectionalLight(0x60a5fa, 0.80); rl.position.set(0, 4, -5); scene.add(rl);
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x020b1e, 0.95);
+            hemiLight.position.set(0, 10, 0);
+            scene.add(hemiLight);
+
+            const mainLight = new THREE.DirectionalLight(0xffffff, 0.95);
+            mainLight.position.set(3.5, 6.5, 4.5);
+            if (!isMobileDevice) { mainLight.castShadow = true; mainLight.shadow.mapSize.set(1024, 1024); }
+            scene.add(mainLight);
+
+            const fillLight = new THREE.DirectionalLight(0x0ea5e9, 0.55);
+            fillLight.position.set(-4.5, 2.5, 3);
+            scene.add(fillLight);
+
+            const rimLight = new THREE.DirectionalLight(0x60a5fa, 0.80);
+            rimLight.position.set(0, 4, -5);
+            scene.add(rimLight);
 
             buildRobot();
+            setupInteractions();
             animate();
             renderDockButtons();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-
-            container.addEventListener('click', () => {
-                spawnBubble();
-                triggerWave();
-            });
-
-            // Mobile touch - detecta tap (sem movimento significativo)
-            let _tStartX = 0, _tStartY = 0, _tStartTime = 0;
-            container.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1) {
-                    _tStartX = e.touches[0].clientX;
-                    _tStartY = e.touches[0].clientY;
-                    _tStartTime = Date.now();
-                }
-            }, { passive: true });
-            container.addEventListener('touchend', (e) => {
-                if (e.changedTouches.length === 1) {
-                    const dx = e.changedTouches[0].clientX - _tStartX;
-                    const dy = e.changedTouches[0].clientY - _tStartY;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    const duration = Date.now() - _tStartTime;
-                    if (dist < 18 && duration < 450) {
-                        spawnBubble();
-                        triggerWave();
-                    }
-                }
-            }, { passive: true });
 
             setTimeout(() => {
                 spawnBubble('👋 Olá! Eu sou o ' + ROBOT_NAME + '!');
@@ -1378,107 +1575,462 @@ O futuro é construído por quem aprende a programar e inovar!</textarea>
             }, 600);
         }
 
-        let isWaving = false, waveTimer = 0;
-        function triggerWave() { isWaving = true; waveTimer = 0; }
-
-        function createCrescentEyeGeometry() {
-            const shape = new THREE.Shape();
-            shape.moveTo(-0.17, -0.03); shape.bezierCurveTo(-0.17, 0.09, -0.08, 0.13, 0, 0.13);
-            shape.bezierCurveTo(0.08, 0.13, 0.17, 0.09, 0.17, -0.03);
-            const geom = new THREE.ExtrudeGeometry(shape, { depth: 0.015, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.008, bevelThickness: 0.008 });
-            geom.center(); return geom;
-        }
-
         function buildRobot() {
-            const whitePlasticMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.28, metalness: 0.05 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: BODY_COLOR, roughness: 0.28, metalness: 0.05 });
+            const accentMat = new THREE.MeshStandardMaterial({ color: ACCENT_COLOR, roughness: 0.30, metalness: 0.1 });
             const pedestalMat = new THREE.MeshStandardMaterial({ color: 0x0b1329, roughness: 0.35, metalness: 0.4 });
             const darkJointMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.45, metalness: 0.3 });
             const glossyVisorMat = new THREE.MeshPhysicalMaterial({ color: 0x06090e, roughness: 0.08, metalness: 0.1, clearcoat: 1.0, reflectivity: 0.95 });
 
-            cyanEyeMat = new THREE.MeshBasicMaterial({ color: '${config.eyeColor}' });
-            const ringMat = new THREE.MeshBasicMaterial({ color: '${config.eyeColor}' });
-            const accentMat = new THREE.MeshStandardMaterial({ color: '${config.accentColor}', roughness: 0.30, metalness: 0.1 });
+            cyanEyeMat = new THREE.MeshBasicMaterial({ color: EYE_COLOR });
+            const ringMat = new THREE.MeshBasicMaterial({ color: EYE_COLOR });
 
-            const baseGroup = new THREE.Group(); scene.add(baseGroup);
-            const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(1.18, 1.24, 0.11, 48), pedestalMat); pedestal.position.y = 0.055; baseGroup.add(pedestal);
-            const ring = new THREE.Mesh(new THREE.TorusGeometry(1.17, 0.012, 16, 48), ringMat); ring.rotation.x = Math.PI / 2; ring.position.y = 0.11; baseGroup.add(ring);
+            // Pedestal e Sombras
+            const baseGroup = new THREE.Group();
+            scene.add(baseGroup);
 
-            const root = new THREE.Group(); root.position.y = 0.24; scene.add(root);
-            torsoGroup = new THREE.Group(); root.add(torsoGroup);
+            const pedestalMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.18, 1.24, 0.11, 48), pedestalMat);
+            pedestalMesh.position.y = 0.055;
+            baseGroup.add(pedestalMesh);
 
-            const bodyGeo = new THREE.SphereGeometry(0.64, 40, 40); bodyGeo.scale(0.96, 1.28, 0.90);
-            const bodyMesh = new THREE.Mesh(bodyGeo, whitePlasticMat); bodyMesh.position.y = 0.78; torsoGroup.add(bodyMesh);
+            const ringMesh = new THREE.Mesh(new THREE.TorusGeometry(1.17, 0.012, 16, 48), ringMat);
+            ringMesh.rotation.x = Math.PI / 2;
+            ringMesh.position.y = 0.11;
+            baseGroup.add(ringMesh);
 
-            const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.48, 0.14, 28), accentMat);
-            collar.position.set(0, 1.44, 0.02); collar.scale.set(1.05, 1, 0.92); torsoGroup.add(collar);
+            const floorShadowMat = new THREE.MeshBasicMaterial({ map: createSoftShadowTexture(), transparent: true, depthWrite: false });
+            const floorShadow = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 3.2), floorShadowMat);
+            floorShadow.rotation.x = -Math.PI / 2;
+            floorShadow.position.y = 0.002;
+            baseGroup.add(floorShadow);
 
-            const bib = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.105, 0.34, 20), accentMat);
-            bib.position.set(0, 1.25, 0.51); bib.rotation.x = -0.22; bib.scale.set(1, 1, 0.45); torsoGroup.add(bib);
+            baseShadowMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.35, 1.35), floorShadowMat);
+            baseShadowMesh.rotation.x = -Math.PI / 2;
+            baseShadowMesh.position.y = 0.113;
+            baseGroup.add(baseShadowMesh);
 
-            // Braços
-            rightArmPivot = new THREE.Group(); rightArmPivot.position.set(0.65, 1.18, 0);
-            rightArmPivot.add(new THREE.Mesh(new THREE.SphereGeometry(0.135, 20, 20), darkJointMat));
-            const armBody = new THREE.Group(); armBody.position.set(0.11, -0.34, 0.02); armBody.rotation.z = -0.14; rightArmPivot.add(armBody);
-            const armGeo = new THREE.SphereGeometry(0.15, 24, 24); armGeo.scale(0.82, 2.55, 0.95);
-            armBody.add(new THREE.Mesh(armGeo, whitePlasticMat));
+            // Robô Flutuante Completo
+            robotRoot = new THREE.Group();
+            robotRoot.position.y = 0.24;
+            scene.add(robotRoot);
+
+            torsoGroup = new THREE.Group();
+            robotRoot.add(torsoGroup);
+
+            // Corpo
+            const bodyGeo = new THREE.SphereGeometry(0.64, 40, 40);
+            bodyGeo.scale(0.96, 1.28, 0.90);
+            const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+            bodyMesh.position.y = 0.78;
+            torsoGroup.add(bodyMesh);
+
+            // Gola e Gravatinha
+            const collarMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.48, 0.14, 28), accentMat);
+            collarMesh.position.set(0, 1.44, 0.02);
+            collarMesh.scale.set(1.05, 1, 0.92);
+            torsoGroup.add(collarMesh);
+
+            const bibMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.105, 0.34, 20), accentMat);
+            bibMesh.position.set(0, 1.25, 0.51);
+            bibMesh.rotation.x = -0.22;
+            bibMesh.scale.set(1, 1, 0.45);
+            torsoGroup.add(bibMesh);
+
+            const bibTipMesh = new THREE.Mesh(new THREE.SphereGeometry(0.105, 20, 20), accentMat);
+            bibTipMesh.position.set(0, 1.09, 0.545);
+            bibTipMesh.scale.set(1, 0.9, 0.45);
+            torsoGroup.add(bibTipMesh);
+
+            // Encaixes dos Ombros
+            [-1, 1].forEach(side => {
+                const socketMesh = new THREE.Mesh(new THREE.SphereGeometry(0.22, 20, 20), accentMat);
+                socketMesh.position.set(side * 0.54, 1.14, 0);
+                socketMesh.scale.set(0.5, 1.1, 0.95);
+                torsoGroup.add(socketMesh);
+            });
+
+            // Pescoço
+            const neckMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.18, 24), darkJointMat);
+            neckMesh.position.y = 1.54;
+            torsoGroup.add(neckMesh);
+
+            // Braços Articulados com Detalhe Interno
+            function createArm(isLeft) {
+                const side = isLeft ? -1 : 1;
+                const pivot = new THREE.Group();
+                pivot.position.set(side * 0.65, 1.18, 0);
+                const jointMesh = new THREE.Mesh(new THREE.SphereGeometry(0.135, 20, 20), darkJointMat);
+                pivot.add(jointMesh);
+
+                const armBody = new THREE.Group();
+                armBody.position.set(side * 0.11, -0.34, 0.02);
+                armBody.rotation.z = side * -0.14;
+                pivot.add(armBody);
+
+                const armGeo = new THREE.SphereGeometry(0.15, 24, 24);
+                armGeo.scale(0.82, 2.55, 0.95);
+                const armMesh = new THREE.Mesh(armGeo, bodyMat);
+                armBody.add(armMesh);
+
+                const innerGeo = new THREE.SphereGeometry(0.135, 20, 20);
+                innerGeo.scale(0.65, 2.25, 0.78);
+                const innerMesh = new THREE.Mesh(innerGeo, accentMat);
+                innerMesh.position.set(-side * 0.045, -0.02, 0);
+                armBody.add(innerMesh);
+
+                return pivot;
+            }
+            leftArmPivot = createArm(true);
+            rightArmPivot = createArm(false);
+            torsoGroup.add(leftArmPivot);
             torsoGroup.add(rightArmPivot);
 
-            leftArmPivot = new THREE.Group(); leftArmPivot.position.set(-0.65, 1.18, 0);
-            leftArmPivot.add(new THREE.Mesh(new THREE.SphereGeometry(0.135, 20, 20), darkJointMat));
-            const lArmBody = new THREE.Group(); lArmBody.position.set(-0.11, -0.34, 0.02); lArmBody.rotation.z = 0.14; leftArmPivot.add(lArmBody);
-            lArmBody.add(new THREE.Mesh(armGeo, whitePlasticMat));
-            torsoGroup.add(leftArmPivot);
-
             // Cabeça
-            headGroup = new THREE.Group(); headGroup.position.set(0, 1.62, 0); torsoGroup.add(headGroup);
-            const headGeo = new THREE.SphereGeometry(0.74, 40, 40); headGeo.scale(1.08, 0.92, 0.96);
-            const headMesh = new THREE.Mesh(headGeo, whitePlasticMat); headMesh.position.y = 0.56; headGroup.add(headMesh);
+            headGroup = new THREE.Group();
+            headGroup.position.set(0, 1.62, 0);
+            torsoGroup.add(headGroup);
 
-            const topCap = new THREE.Mesh(new THREE.SphereGeometry(0.36, 24, 20, 0, Math.PI * 2, 0, Math.PI * 0.36), accentMat);
-            topCap.scale.set(1.15, 0.45, 0.95); topCap.position.set(0, 1.09, -0.02); headGroup.add(topCap);
+            const headGeo = new THREE.SphereGeometry(0.74, 40, 40);
+            headGeo.scale(1.08, 0.92, 0.96);
+            const headMesh = new THREE.Mesh(headGeo, bodyMat);
+            headMesh.position.y = 0.56;
+            headGroup.add(headMesh);
 
-            // Visor & Olhos
-            const visorGroup = new THREE.Group(); visorGroup.position.set(0, 0.54, 0.05); headGroup.add(visorGroup);
-            const visor = new THREE.Mesh(new THREE.SphereGeometry(0.58, 36, 36), glossyVisorMat);
-            visor.scale.set(1.06, 0.84, 0.92); visor.position.z = 0.14; visorGroup.add(visor);
+            const topCapGeo = new THREE.SphereGeometry(0.36, 24, 20, 0, Math.PI * 2, 0, Math.PI * 0.36);
+            topCapGeo.scale(1.15, 0.45, 0.95);
+            const topCapMesh = new THREE.Mesh(topCapGeo, accentMat);
+            topCapMesh.position.set(0, 1.09, -0.02);
+            headGroup.add(topCapMesh);
+
+            // Orelhas
+            [-1, 1].forEach(side => {
+                const earGroup = new THREE.Group();
+                earGroup.position.set(side * 0.78, 0.54, 0);
+                const earInnerGeo = new THREE.CylinderGeometry(0.17, 0.19, 0.08, 20);
+                earInnerGeo.rotateZ(Math.PI / 2);
+                earGroup.add(new THREE.Mesh(earInnerGeo, darkJointMat));
+                const earOuterGeo = new THREE.SphereGeometry(0.18, 20, 20);
+                earOuterGeo.scale(0.45, 1.05, 0.95);
+                const earOuterMesh = new THREE.Mesh(earOuterGeo, bodyMat);
+                earOuterMesh.position.x = side * 0.045;
+                earGroup.add(earOuterMesh);
+                headGroup.add(earGroup);
+            });
+
+            // Visor Curvado e Olhos Crescentes
+            const visorGroup = new THREE.Group();
+            visorGroup.position.set(0, 0.54, 0.05);
+            headGroup.add(visorGroup);
+
+            const visorGeo = new THREE.SphereGeometry(0.58, 40, 40);
+            visorGeo.scale(1.06, 0.84, 0.92);
+            const visorMesh = new THREE.Mesh(visorGeo, glossyVisorMat);
+            visorMesh.position.z = 0.14;
+            visorGroup.add(visorMesh);
 
             const eyeGeo = createCrescentEyeGeometry();
-            const leftEye = new THREE.Mesh(eyeGeo, cyanEyeMat); leftEye.position.set(-0.21, 0.04, 0.655); leftEye.rotation.set(0, -0.26, 0.08); visorGroup.add(leftEye);
-            const rightEye = new THREE.Mesh(eyeGeo, cyanEyeMat); rightEye.position.set(0.21, 0.04, 0.655); rightEye.rotation.set(0, 0.26, -0.08); visorGroup.add(rightEye);
+            leftEyeMesh = new THREE.Mesh(eyeGeo, cyanEyeMat);
+            leftEyeMesh.position.set(-0.21, 0.04, 0.655);
+            leftEyeMesh.rotation.set(0, -0.26, 0.08);
+            visorGroup.add(leftEyeMesh);
+
+            rightEyeMesh = new THREE.Mesh(eyeGeo, cyanEyeMat);
+            rightEyeMesh.position.set(0.21, 0.04, 0.655);
+            rightEyeMesh.rotation.set(0, 0.26, -0.08);
+            visorGroup.add(rightEyeMesh);
+        }
+
+        function setupInteractions() {
+            const container = document.getElementById('canvas-container');
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                const isMobileScreen = window.innerWidth < 768;
+                camera.position.z = isMobileScreen ? 7.2 : 6.2;
+                camera.position.y = isMobileScreen ? 1.55 : 1.35;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                state.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                state.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            if (container) {
+                container.addEventListener('touchmove', (e) => {
+                    if (e.touches.length > 0) {
+                        state.mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+                        state.mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+                    }
+                }, { passive: true });
+
+                // Clique no desktop
+                container.addEventListener('click', () => {
+                    if (state.mode === 'idle') {
+                        const reactions = ['wave', 'happyBounce', 'headTilt', 'wiggle'];
+                        triggerIdleAction(reactions[Math.floor(Math.random() * reactions.length)]);
+                    }
+                });
+
+                // Detecção de tap no mobile
+                let _tStartX = 0, _tStartY = 0, _tStartTime = 0;
+                container.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        _tStartX = e.touches[0].clientX;
+                        _tStartY = e.touches[0].clientY;
+                        _tStartTime = Date.now();
+                    }
+                }, { passive: true });
+
+                container.addEventListener('touchend', (e) => {
+                    if (e.changedTouches.length === 1) {
+                        const dx = e.changedTouches[0].clientX - _tStartX;
+                        const dy = e.changedTouches[0].clientY - _tStartY;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        const duration = Date.now() - _tStartTime;
+                        if (dist < 20 && duration < 450 && state.mode === 'idle') {
+                            const reactions = ['wave', 'happyBounce', 'headTilt', 'wiggle', 'lookAround'];
+                            triggerIdleAction(reactions[Math.floor(Math.random() * reactions.length)]);
+                        }
+                    }
+                }, { passive: true });
+            }
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            const delta = clock.getDelta();
+            const delta = Math.min(clock.getDelta(), 0.1);
             const elapsed = clock.getElapsedTime();
 
-            if (torsoGroup) {
-                torsoGroup.position.y = Math.sin(elapsed * 2.2) * 0.045;
-                torsoGroup.rotation.z = Math.sin(elapsed * 2.0) * 0.02;
-            }
-            if (headGroup) {
-                headGroup.rotation.z = Math.sin(elapsed * 1.3) * 0.04;
-                headGroup.rotation.x = Math.sin(elapsed * 1.8) * 0.03;
+            // Flutuação base
+            const floatOffset = Math.sin(elapsed * 2.2) * 0.045;
+            let extraBounce = 0;
+
+            if (robotRoot) {
+                robotRoot.position.y = 0.24 + floatOffset;
             }
 
-            // Balões Periódicos
-            state.idleBubbleTimer -= delta;
-            if (state.idleBubbleTimer <= 0) {
-                spawnBubble();
-                state.idleBubbleTimer = 4.5 + Math.random() * 3.0;
+            // Sombra reativa à altura
+            if (baseShadowMesh) {
+                const s = 1.0 - (floatOffset + extraBounce) * 1.5;
+                baseShadowMesh.scale.set(s, s, s);
             }
 
-            // Aceno
-            if (isWaving && rightArmPivot) {
-                waveTimer += delta;
-                if (waveTimer < 2.8) {
-                    rightArmPivot.rotation.z = 2.15 + Math.sin(waveTimer * 14) * 0.38;
+            // Piscadas orgânicas
+            state.blinkTimer -= delta;
+            if (state.blinkTimer <= 0 && !state.isBlinking) {
+                state.isBlinking = true;
+                state.blinkProgress = 0;
+                state.isDoubleBlink = Math.random() < 0.35;
+                state.doubleBlinkPhase = 0;
+            }
+
+            let leftEyeScaleY = 1.0;
+            let rightEyeScaleY = 1.0;
+            let eyeScaleX = 1.0;
+
+            if (state.isBlinking) {
+                state.blinkProgress += delta * 12;
+                if (state.blinkProgress >= Math.PI) {
+                    if (state.isDoubleBlink && state.doubleBlinkPhase === 0) {
+                        state.doubleBlinkPhase = 1;
+                        state.blinkProgress = 0;
+                    } else {
+                        state.isBlinking = false;
+                        state.blinkTimer = 2.0 + Math.random() * 3.5;
+                    }
                 } else {
-                    isWaving = false; waveTimer = 0; rightArmPivot.rotation.z = 0.16;
+                    const blinkVal = Math.max(0.08, Math.cos(state.blinkProgress));
+                    leftEyeScaleY = blinkVal;
+                    rightEyeScaleY = blinkVal;
                 }
-            } else if (state.mode === 'talking' && rightArmPivot && leftArmPivot) {
-                rightArmPivot.rotation.z = 0.35 + Math.sin(elapsed * 5.5) * 0.25;
-                leftArmPivot.rotation.z = -0.35 - Math.cos(elapsed * 5.5) * 0.25;
+            }
+
+            // Rotações alvos
+            let targetHeadRotZ = 0, targetHeadRotX = 0, targetHeadRotY = 0;
+            let targetRightArmZ = 0.16, targetRightArmX = 0;
+            let targetLeftArmZ = -0.16, targetLeftArmX = 0;
+            let targetTorsoRotZ = 0, targetTorsoRotY = 0;
+
+            // Animações por estado
+            if (state.mode === 'talking') {
+                const sc = Math.sin(elapsed * 7.5);
+                targetHeadRotX = sc * 0.07;
+                targetHeadRotZ = Math.sin(elapsed * 3.5) * 0.05;
+                targetTorsoRotZ = Math.sin(elapsed * 3.0) * 0.03;
+                targetRightArmZ = 0.42 + Math.sin(elapsed * 4.5) * 0.22;
+                targetRightArmX = -0.18 + sc * 0.12;
+                targetLeftArmZ = -0.42 - Math.cos(elapsed * 4.5) * 0.22;
+                targetLeftArmX = -0.18 - sc * 0.12;
+                leftEyeScaleY = 0.88 + Math.abs(sc) * 0.22;
+                rightEyeScaleY = leftEyeScaleY;
+                eyeScaleX = 1.0 + Math.sin(elapsed * 4) * 0.08;
+
+            } else if (state.mode === 'thinking') {
+                targetHeadRotZ = 0.24;
+                targetHeadRotY = 0.16;
+                targetTorsoRotZ = 0.05;
+                targetRightArmZ = 0.22;
+                targetLeftArmZ = -0.32;
+                targetLeftArmX = -0.35;
+                if (leftEyeMesh && rightEyeMesh) {
+                    leftEyeMesh.scale.set(1.15, 1.15, 1);
+                    rightEyeMesh.scale.set(0.92, 0.88, 1);
+                }
+
+            } else {
+                // Modo Idle
+                if (state.idleAction === 'none') {
+                    state.idleTimer -= delta;
+                    if (state.idleTimer <= 0) {
+                        triggerIdleAction(pickNextIdleAction());
+                    }
+
+                    state.idleBubbleTimer -= delta;
+                    if (state.idleBubbleTimer <= 0) {
+                        spawnBubble();
+                        state.idleBubbleTimer = 4.5 + Math.random() * 3.0;
+                    }
+
+                    const breath = Math.sin(elapsed * 2.0);
+                    const armBreath = Math.sin(elapsed * 2.2 - 0.4) * 0.07;
+                    targetHeadRotZ = Math.sin(elapsed * 1.3) * 0.04;
+                    targetHeadRotX = Math.sin(elapsed * 1.8) * 0.03;
+                    targetRightArmZ = 0.16 + armBreath;
+                    targetLeftArmZ = -0.16 - armBreath;
+                    targetTorsoRotZ = breath * 0.025;
+
+                } else {
+                    state.idleActionTime += delta;
+                    const p = Math.min(state.idleActionTime / state.idleActionDuration, 1.0);
+
+                    if (state.idleAction === 'wave') {
+                        if (p < 0.22) {
+                            const t = p / 0.22;
+                            targetRightArmZ = THREE.MathUtils.lerp(0.16, 2.15, t);
+                            targetRightArmX = THREE.MathUtils.lerp(0, -0.28, t);
+                            targetHeadRotZ = -0.14 * t;
+                        } else if (p < 0.78) {
+                            const waveSin = Math.sin((state.idleActionTime - 0.7) * 14);
+                            targetRightArmZ = 2.15 + waveSin * 0.38;
+                            targetRightArmX = -0.32 + waveSin * 0.14;
+                            targetHeadRotZ = -0.16 + waveSin * 0.05;
+                            targetHeadRotX = 0.05;
+                            leftEyeScaleY = 0.82;
+                            rightEyeScaleY = 0.82;
+                            eyeScaleX = 1.14;
+                        } else {
+                            const t = (p - 0.78) / 0.22;
+                            targetRightArmZ = THREE.MathUtils.lerp(2.15, 0.16, t);
+                            targetRightArmX = THREE.MathUtils.lerp(-0.32, 0, t);
+                            targetHeadRotZ = THREE.MathUtils.lerp(-0.16, 0, t);
+                        }
+                        targetLeftArmZ = -0.20;
+
+                    } else if (state.idleAction === 'lookAround') {
+                        if (p < 0.40) {
+                            const t = Math.sin((p / 0.40) * Math.PI * 0.5);
+                            targetHeadRotY = -0.48 * t;
+                            targetHeadRotX = -0.06 * t;
+                            targetHeadRotZ = -0.08 * t;
+                            targetTorsoRotY = -0.12 * t;
+                        } else if (p < 0.55) {
+                            const t = (p - 0.40) / 0.15;
+                            targetHeadRotY = THREE.MathUtils.lerp(-0.48, 0.48, t);
+                            targetHeadRotZ = THREE.MathUtils.lerp(-0.08, 0.14, t);
+                            targetTorsoRotY = THREE.MathUtils.lerp(-0.12, 0.12, t);
+                        } else if (p < 0.85) {
+                            targetHeadRotY = 0.48;
+                            targetHeadRotZ = 0.14;
+                            targetTorsoRotY = 0.12;
+                        } else {
+                            const t = (p - 0.85) / 0.15;
+                            targetHeadRotY = THREE.MathUtils.lerp(0.48, 0, t);
+                            targetHeadRotZ = THREE.MathUtils.lerp(0.14, 0, t);
+                            targetTorsoRotY = THREE.MathUtils.lerp(0.12, 0, t);
+                        }
+                        targetRightArmZ = 0.18 + Math.sin(state.idleActionTime * 2.5) * 0.06;
+                        targetLeftArmZ = -0.18 - Math.sin(state.idleActionTime * 2.5) * 0.06;
+
+                    } else if (state.idleAction === 'happyBounce') {
+                        const bounceSin = Math.sin(p * Math.PI * 4);
+                        extraBounce = Math.max(0, bounceSin) * 0.12;
+                        if (robotRoot) robotRoot.position.y = 0.24 + floatOffset + extraBounce;
+                        targetHeadRotX = -bounceSin * 0.14;
+                        targetRightArmZ = 0.48 + bounceSin * 0.24;
+                        targetLeftArmZ = -0.48 - bounceSin * 0.24;
+                        targetRightArmX = 0.24;
+                        targetLeftArmX = 0.24;
+                        targetTorsoRotZ = Math.sin(p * Math.PI * 4) * 0.04;
+                        leftEyeScaleY = 0.84 + Math.abs(bounceSin) * 0.28;
+                        rightEyeScaleY = leftEyeScaleY;
+                        eyeScaleX = 1.12;
+
+                    } else if (state.idleAction === 'headTilt') {
+                        const envelope = Math.sin(p * Math.PI);
+                        targetHeadRotZ = 0.32 * envelope;
+                        targetHeadRotY = 0.16 * envelope;
+                        targetHeadRotX = -0.06 * envelope;
+                        targetLeftArmZ = -0.32 * envelope;
+                        targetLeftArmX = -0.34 * envelope;
+                        targetRightArmZ = 0.18;
+                        if (p > 0.32 && p < 0.68) {
+                            rightEyeScaleY = 0.10;
+                            leftEyeScaleY = 1.18;
+                        }
+
+                    } else if (state.idleAction === 'wiggle') {
+                        const envelope = Math.sin(p * Math.PI);
+                        const rhythm = Math.sin(state.idleActionTime * 8);
+                        targetTorsoRotZ = rhythm * 0.08 * envelope;
+                        targetTorsoRotY = -rhythm * 0.05 * envelope;
+                        targetHeadRotZ = -rhythm * 0.10 * envelope;
+                        targetRightArmZ = 0.22 + rhythm * 0.20 * envelope;
+                        targetLeftArmZ = -0.22 + rhythm * 0.20 * envelope;
+                        leftEyeScaleY = 0.90 + Math.abs(rhythm) * 0.18;
+                        rightEyeScaleY = leftEyeScaleY;
+                    }
+
+                    if (state.idleActionTime >= state.idleActionDuration) {
+                        state.idleAction = 'none';
+                        state.idleTimer = 2.5 + Math.random() * 3.5;
+                    }
+                }
+            }
+
+            // Aplica escala dos olhos
+            if (state.mode !== 'thinking' && leftEyeMesh && rightEyeMesh) {
+                leftEyeMesh.scale.set(eyeScaleX, leftEyeScaleY, 1);
+                rightEyeMesh.scale.set(eyeScaleX, rightEyeScaleY, 1);
+            }
+
+            // Rastreamento suave do olhar pelo mouse/toque
+            state.currentLook.x += (state.mouse.x - state.currentLook.x) * 0.07;
+            state.currentLook.y += (state.mouse.y - state.currentLook.y) * 0.07;
+
+            const finalHeadRotY = state.currentLook.x * 0.36 + targetHeadRotY;
+            const finalHeadRotX = -state.currentLook.y * 0.22 + targetHeadRotX;
+
+            if (headGroup) {
+                headGroup.rotation.y += (finalHeadRotY - headGroup.rotation.y) * 0.12;
+                headGroup.rotation.x += (finalHeadRotX - headGroup.rotation.x) * 0.12;
+                headGroup.rotation.z += (targetHeadRotZ - headGroup.rotation.z) * 0.12;
+            }
+
+            if (torsoGroup) {
+                torsoGroup.rotation.z += (targetTorsoRotZ - torsoGroup.rotation.z) * 0.10;
+                torsoGroup.rotation.y += (targetTorsoRotY - torsoGroup.rotation.y) * 0.10;
+            }
+
+            if (rightArmPivot) {
+                rightArmPivot.rotation.z += (targetRightArmZ - rightArmPivot.rotation.z) * 0.14;
+                rightArmPivot.rotation.x += (targetRightArmX - rightArmPivot.rotation.x) * 0.14;
+            }
+
+            if (leftArmPivot) {
+                leftArmPivot.rotation.z += (targetLeftArmZ - leftArmPivot.rotation.z) * 0.14;
+                leftArmPivot.rotation.x += (targetLeftArmX - leftArmPivot.rotation.x) * 0.14;
             }
 
             if (controls) controls.update();
